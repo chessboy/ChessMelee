@@ -11,21 +11,34 @@ import GameplayKit
 import OctopusKit
 
 struct TrainingRecord: Codable {
-	var pieceType: Piece.PieceType
+	var pieceType: PieceType
 	var inputs: [Float]
 	var output: Int
 }
 
+struct AccuracyStats {
+	
+	var attemptedMoveCount: Int = 0
+	var illegalMoveCount: Int = 0
+
+	var currentRating: Float {
+		return attemptedMoveCount == 0 ? 0 : (Float(attemptedMoveCount)-Float(illegalMoveCount))/Float(attemptedMoveCount)
+	}
+}
+
 final class ChessComponent: OKComponent, OKUpdatableComponent {
     
-	public private(set) var currentEpoch = 0
-
 	private var board = Board()
 	private var boardNode = BoardNode()
+	
 	private var frame = 0
-	private var ticksPerEpoch = 0
+	private var lastCaptureFrame = 0
+	
 	private var pieceTagGenerator: Int = 0
 	private var zonePointer = 0
+	
+	private var trainingRecords: [PieceType: [TrainingRecord]] = [:]
+	private var accuracyStats: [PieceType: AccuracyStats] = [:]
 
 	lazy var brainComponent = coComponent(BrainComponent.self)
 
@@ -42,14 +55,23 @@ final class ChessComponent: OKComponent, OKUpdatableComponent {
 	override func didAddToEntity(withNode node: SKNode) {
 		boardNode.position = CGPoint(x: 0, y: CGFloat(2) * Constants.Chessboard.squareDimension)
 		node.addChild(boardNode)
+		for pieceType in PieceType.allCases {
+			accuracyStats[pieceType] = AccuracyStats()
+		}
 		setupBoard()
 	}
 		
 	func setupBoard() {
 	
 		frame = 0
+		lastCaptureFrame = 0
 		pieceTagGenerator = 0
-		
+		if !Constants.Training.guidedTraining {
+			accuracyStats = [:]
+			for pieceType in PieceType.allCases {
+				accuracyStats[pieceType] = AccuracyStats()
+			}
+		}
 		(board.getPieces(color: .white) + board.getPieces(color: .black)).forEach({
 			if let piece = board.getPiece(at: $0.location) {
 				boardNode.removePiece(piece, from: $0.location)
@@ -57,12 +79,12 @@ final class ChessComponent: OKComponent, OKUpdatableComponent {
 			board.removePiece(at: $0.location)
 		})
 
-		let pieces: [Piece.PieceType] = [.rook, .knight, .bishop, .queen, .king, .bishop, .knight, .rook]
+		let pieces: [PieceType] = [.rook, .knight, .bishop, .queen, .king, .bishop, .knight, .rook]
 		
 		// zones
 		// 1 3 5 7 9 11 13 15
 		// 0 2 4 6 8 10 12 14
-		func makePiece(index: Int, type: Piece.PieceType, color: PlayerColor) -> Piece {
+		func makePiece(index: Int, type: PieceType, color: PlayerColor) -> Piece {
 			
 			let tag = pieceTagGenerator
 			let zoneId = (index % Constants.Chessboard.columnCount)/(Constants.Chessboard.zoneCount/2) * 2 + (color == .white ? 0 : 1)
@@ -97,22 +119,20 @@ final class ChessComponent: OKComponent, OKUpdatableComponent {
 		}
 
 		renderBoard()
-		
-//		print()
-//		print("current epoch: \(currentEpoch), ticksPerCurrentEpoch: \(ticksPerEpoch.abbrev)")
 	}
-					
-//	var currentPieceRankings: [Piece.PieceType: [Float]] {
-//		return [:]
-//	}
-	
+							
 	override func update(deltaTime seconds: TimeInterval) {
 		
 		if frame.isMultiple(of: 50) {
 			gatherStats()
 		}
 		
-		// TODO: add empty board check
+		if frame > 500, frame.isMultiple(of: 30) {
+			if frame - lastCaptureFrame > (Constants.Training.guidedTraining ? 200 : 100) {
+				setupBoard()
+				return
+			}
+		}
 		
 		if Constants.Training.guidedTraining {
 			moveOnceRandomly(color: .white)
@@ -125,48 +145,77 @@ final class ChessComponent: OKComponent, OKUpdatableComponent {
 			moveOnce(color: .black)
 			zonePointer = (zonePointer + 1) % Constants.Chessboard.zoneCount
 		}
+		
 		frame += 1
 	}
-	
-	func forceNextGeneration() {
-		frame = Int.max
-	}
-	
+		
 	func gatherStats() {
-		/*
-		let rankings = currentPieceRankings
-		let attempedMoveCount = smartPieces.reduce(Float.zero) { $0 + Float($1.attemptedMoveCount) }
-		let successfulMoveCount = smartPieces.reduce(Float.zero) { $0 + Float($1.successfulMoveCount) }
-		let accuracy = attempedMoveCount == 0 ? 0 : successfulMoveCount/attempedMoveCount
+
+		let labelAttrs: [AttributedStringBuilder.Attribute] = [
+			.textColor(UIColor.lightGray),
+			.font(UIFont.systemFont(ofSize: 18, weight: .bold))
+		]
 
 		if let statsComponent = coComponent(GlobalStatsComponent.self) {
 			
 			let builder = AttributedStringBuilder()
 			builder.defaultAttributes = [.font(UIFont.systemFont(ofSize: 22)), .textColor(UIColor.white), .alignment(.center)]
 				
-			for piece in Piece.PieceType.allCases {
+			if Constants.Training.guidedTraining {
 				builder
-					.text(piece.description)
-					.text(": ")
-					.text(rankings[piece]![0].rating.formattedTo2Places)
-					.text(" zone (\(rankings[piece]![0].zoneId))")
+					.text("Move Counts", attributes: [.font(UIFont.systemFont(ofSize: 24, weight: .bold))])
+					.newline()
+					.newline(attributes: [.font(UIFont.systemFont(ofSize: 10, weight: .bold))])
+			} else {
+				builder
+					.text("Accuracy", attributes: [.font(UIFont.systemFont(ofSize: 24, weight: .bold))])
+					.newline()
+					.newline(attributes: [.font(UIFont.systemFont(ofSize: 10, weight: .bold))])
+			}
 
-				if piece != Piece.PieceType.allCases.last {
-					builder.text("  |  ")
+			for piece in PieceType.allCases {
+				builder.text(piece.description, attributes: labelAttrs).text("  ", attributes: labelAttrs)
+
+				if Constants.Training.guidedTraining {
+					builder.text(accuracyStats[piece]!.attemptedMoveCount.abbrev)
+				} else {
+					builder.text(accuracyStats[piece]!.currentRating.formattedToPercent)
+				}
+				
+				if piece != PieceType.allCases.last {
+					builder.text("        ")
 				}
 			}
 			
-			builder
-				.newline()
-				.newline(attributes: [.font(UIFont.systemFont(ofSize: 10, weight: .bold))])
-				.text("Accuracy: \(accuracy.formattedToPercent)")
+//			builder
+//				.newline()
+//				.newline(attributes: [.font(UIFont.systemFont(ofSize: 10, weight: .bold))])
+//				.text("Accuracy: \(accuracy.formattedToPercent)")
 
 
 			statsComponent.updateStats(builder.attributedString)
 		}
-		*/
 	}
 		
+	func locationOfRandomPieceWithLegalMoves(color: PlayerColor) -> BoardLocation? {
+		
+		let piecesOfColor = board.getPieces(color: color)
+
+		guard piecesOfColor.count > 0 else {
+			return nil
+		}
+		
+		var attemptCount = 0
+		while attemptCount <= 20 {
+			if let randomPiece = piecesOfColor.randomElement(), board.canPieceMove(randomPiece) {
+				return randomPiece.location
+			}
+			attemptCount += 1
+		}
+		
+		return nil
+	}
+
 	func locationOfPieceInZoneWithLegalMoves(color: PlayerColor) -> BoardLocation? {
 		
 		let piecesInZone = board.getPieces(color: color).filter({ $0.zoneId == zonePointer })
@@ -177,7 +226,7 @@ final class ChessComponent: OKComponent, OKUpdatableComponent {
 		
 		var attemptCount = 0
 		while attemptCount <= 20 {
-			if let randomPiece = piecesInZone.randomElement(), board.possibleMoveLocationsForPiece(atLocation: randomPiece.location).count > 0 {
+			if let randomPiece = piecesInZone.randomElement(), board.canPieceMove(randomPiece) {
 				//print("attemptCount: \(attemptCount)")
 				return randomPiece.location
 			}
@@ -189,60 +238,71 @@ final class ChessComponent: OKComponent, OKUpdatableComponent {
 
 	func moveOnce(color: PlayerColor) {
 				
-		guard let randomFromLocation = locationOfPieceInZoneWithLegalMoves(color: color),
-		   let fromPiece = board.getPiece(at: randomFromLocation) else {
+		guard let fromLocation = locationOfPieceInZoneWithLegalMoves(color: color),
+		   let fromPiece = board.getPiece(at: fromLocation) else {
 			//print("moveOnce: error: could not get a piece to move!")
 			//OctopusKit.shared.currentScene?.togglePauseByPlayer()
 			return
 		}
 		
-		// fromPiece.attemptedMoveCount += 1
+		accuracyStats[fromPiece.type]!.attemptedMoveCount += 1
 		// boardNode.highlightSquare(location: randomFromLocation, color: .yellow)
 
-		let inputs = board.createInputs(at: randomFromLocation)
+		let inputs = brainComponent!.createInputsForBoard(board, at: fromLocation)
 		let predictedBoardStride = brainComponent!.boardStrideForPiece(pieceType: fromPiece.type, inputs: inputs, color: color)
 
 		guard let boardStride = predictedBoardStride else {
-			boardNode.highlightSquare(location: randomFromLocation, color: Constants.Color.noMove)
+			if Constants.Training.highlightNoMoves {
+				boardNode.highlightSquare(location: fromLocation, color: Constants.Color.noMove)
+			}
 			//print("no boardstride returned from inference. outputs: \(outputs.map({ $0.formattedTo2Places }))")
-			//fromSmartPiece.illegalMoveCount += 1
+			accuracyStats[fromPiece.type]!.illegalMoveCount += 1
 			return
 		}
 		
-		guard randomFromLocation.canIncrement(by: boardStride) else {
+		guard fromLocation.canIncrement(by: boardStride) else {
 			// trying to move off the board
-			boardNode.highlightSquare(location: randomFromLocation, color: Constants.Color.illegalMove)
-			//fromPiece.illegalMoveCount += 1
+			if Constants.Training.highlightIllegalMoves {
+				boardNode.highlightSquare(location: fromLocation, color: Constants.Color.illegalMove)
+			}
+			accuracyStats[fromPiece.type]!.illegalMoveCount += 1
 			return
 		}
 					
-		let toLocation = randomFromLocation.incremented(by: boardStride)
+		let toLocation = fromLocation.incremented(by: boardStride)
 		
-		guard board.possibleMoveLocationsForPiece(atLocation: randomFromLocation).contains(toLocation) else {
+		guard board.possibleMoveLocationsForPieceFaster(fromPiece).contains(toLocation) else {
 			// trying to move to a friendly-occupied square
-			boardNode.highlightSquare(location: randomFromLocation, color: Constants.Color.illegalMove)
-			//fromPiece.illegalMoveCount += 1
+			if Constants.Training.highlightIllegalMoves {
+				boardNode.highlightSquare(location: fromLocation, color: Constants.Color.illegalMove)
+			}
+			accuracyStats[fromPiece.type]!.illegalMoveCount += 1
 			return
 		}
 
 		if let toPiece = board.getPiece(at: toLocation) {
-//			boardNode.highlightSquare(location: toLocation, color: Constants.Color.captureMove)
+			if Constants.Training.highlightCaptures {
+				boardNode.highlightSquare(location: toLocation, color: Constants.Color.captureMove)
+			}
+			lastCaptureFrame = frame
 			boardNode.removePiece(toPiece, from: toLocation)
 		}
 		
 		// moving to a legal square
-		board.movePiece(from: randomFromLocation, to: toLocation)
-		boardNode.movePiece(fromPiece, from: randomFromLocation, to: toLocation)
-		//fromPiece.successfulMoveCount += 1
+		board.movePiece(from: fromLocation, to: toLocation)
+		boardNode.movePiece(fromPiece, from: fromLocation, to: toLocation)
 
 		if fromPiece.type == .pawn {
 			// check promotion
 			if !toLocation.canIncrement(by: BoardStride(x: 0, y: color == .white ? 1 : -1)) {
-				boardNode.highlightSquare(location: toLocation, color: Constants.Color.promotionMove)
+				lastCaptureFrame = frame
+				if Constants.Training.highlightPromotions {
+					boardNode.highlightSquare(location: toLocation, color: Constants.Color.promotionMove)
+				}
 				board.removePiece(at: toLocation)
 				boardNode.removePiece(fromPiece, from: toLocation)
 
-				let promotedPieceType = Piece.PieceType.possiblePawnPromotionResultingTypes().randomElement() ?? .queen
+				let promotedPieceType = PieceType.possiblePawnPromotionResultingTypes().randomElement() ?? .queen
 				let promotedPiece = Piece(type: promotedPieceType, color: color, tag: pieceTagGenerator, zoneId: fromPiece.zoneId)
 				pieceTagGenerator += 1
 				board.setPiece(promotedPiece, at: toLocation)
@@ -250,9 +310,13 @@ final class ChessComponent: OKComponent, OKUpdatableComponent {
 			}
 		}
 	}
-		
-	var hasOneSideWon: Bool {
-		return board.getPieces(color: .white).count + board.getPieces(color: .black).count <= 4
+	
+	func saveTrainingRecords() {
+		for piece in PieceType.allCases {
+			let filename = "training-\(piece.description)"
+			let trainingRecordsForPiece = trainingRecords[piece]!
+			LocalFileManager.shared.saveTrainingRecordsToFile(trainingRecordsForPiece, filename: filename)
+		}
 	}
 	
 	func touchDown(point: CGPoint, rightMouse: Bool = false, commandDown: Bool = false, shiftDown: Bool = false, optionDown: Bool = false, clickCount: Int = 1) {
@@ -277,7 +341,7 @@ final class ChessComponent: OKComponent, OKUpdatableComponent {
 					})
 					
 					if shiftDown {
-						let _ = board.createInputs(at: boardLoc, debug: true)
+						let _ = brainComponent!.createInputsForBoard(board, at: boardLoc, debug: true)
 					}
 				}
 			}
@@ -290,17 +354,15 @@ final class ChessComponent: OKComponent, OKUpdatableComponent {
 	// queen	7x7
 	// rook		7x7
 	// king		3x3
-	
-	var trainingRecords: [Piece.PieceType: [TrainingRecord]] = [:]
-	
+		
 	func moveOnceRandomly(color: PlayerColor) {
 		
-		if let randomFromLocation = locationOfPieceInZoneWithLegalMoves(color: color),
-		   let fromPiece = board.getPiece(at: randomFromLocation) {
+		if let fromLocation = locationOfPieceInZoneWithLegalMoves(color: color),
+		   let fromPiece = board.getPiece(at: fromLocation) {
 			
-			var moves = board.possibleMoveLocationsForPiece(atLocation: randomFromLocation)
+			var moves = board.possibleMoveLocationsForPieceFaster(fromPiece)
 			moves = moves.filter({
-				abs(randomFromLocation.x - $0.x) <= 5 && abs(randomFromLocation.y - $0.y) <= 5
+				abs(fromLocation.x - $0.x) <= 5 && abs(fromLocation.y - $0.y) <= 5
 			})
 			
 			let captures = moves.filter({ location in
@@ -309,50 +371,50 @@ final class ChessComponent: OKComponent, OKUpdatableComponent {
 				return board.getPiece(at: loc1)?.value ?? 0 > board.getPiece(at: loc2)?.value ?? 0
 			})
 						
-			if let randomToLocation = captures.first ?? moves.randomElement() {
+			if let toLocation = captures.first ?? moves.randomElement() {
 				
-				if Constants.Training.guidedTraining {
-					let inputs = board.createInputs(at: randomFromLocation)
-					let stride = randomFromLocation.strideTo(location: randomToLocation)
-					let inverter = fromPiece.color == .white ? 1 : -1
+				let inputs = brainComponent!.createInputsForBoard(board, at: fromLocation)
+				let stride = fromLocation.strideTo(location: toLocation)
+				let inverter = fromPiece.color == .white ? 1 : -1
 
-					let visionDimension = Constants.Vision.dimension
-					let centerIndex = (visionDimension * visionDimension) / 2
+				let visionDimension = Constants.Vision.dimension
+				let centerIndex = (visionDimension * visionDimension) / 2
 
-					var outputIndex = -(stride.y * inverter-2)*visionDimension + (stride.x * inverter + 2)
-					if outputIndex >= centerIndex {
-						outputIndex -= 1
-					}
-					
-					if trainingRecords[fromPiece.type] == nil {
-						trainingRecords[fromPiece.type] = []
-					}
-					trainingRecords[fromPiece.type]!.append(TrainingRecord(pieceType: fromPiece.type, inputs: inputs, output: outputIndex))
-					
-	//				print("\(color) \(fromPiece.type.description), from: \(randomFromLocation), to: \(randomToLocation), stride: \(stride), outputs: \(xOutput),\(yOutput)")
-	//				print(inputs)
-	//				print(outputs)
-	//				print()
+				var outputIndex = -(stride.y * inverter-2)*visionDimension + (stride.x * inverter + 2)
+				if outputIndex >= centerIndex {
+					outputIndex -= 1
 				}
 				
-				if let toPiece = board.getPiece(at: randomToLocation) {
-					boardNode.removePiece(toPiece, from: randomToLocation)
+				if trainingRecords[fromPiece.type] == nil {
+					trainingRecords[fromPiece.type] = []
+				}
+				trainingRecords[fromPiece.type]!.append(TrainingRecord(pieceType: fromPiece.type, inputs: inputs, output: outputIndex))
+				
+//				print("\(color) \(fromPiece.type.description), from: \(randomFromLocation), to: \(randomToLocation), stride: \(stride), outputs: \(xOutput),\(yOutput)")
+//				print(inputs)
+//				print(outputs)
+//				print()
+				
+				if let toPiece = board.getPiece(at: toLocation) {
+					lastCaptureFrame = frame
+					boardNode.removePiece(toPiece, from: toLocation)
 				}
 				
-				board.movePiece(from: randomFromLocation, to: randomToLocation)
-				boardNode.movePiece(fromPiece, from: randomFromLocation, to: randomToLocation)
+				accuracyStats[fromPiece.type]!.attemptedMoveCount += 1
+				board.movePiece(from: fromLocation, to: toLocation)
+				boardNode.movePiece(fromPiece, from: fromLocation, to: toLocation)
 
 				if fromPiece.type == .pawn {
 
-					if !randomToLocation.canIncrement(by: BoardStride(x: 0, y: color == .white ? 1 : -1)) {
+					if !toLocation.canIncrement(by: BoardStride(x: 0, y: color == .white ? 1 : -1)) {
 						
-						board.removePiece(at: randomToLocation)
-						boardNode.removePiece(fromPiece, from: randomToLocation)
-						let promotedPieceType = Piece.PieceType.possiblePawnPromotionResultingTypes().randomElement() ?? .queen
+						board.removePiece(at: toLocation)
+						boardNode.removePiece(fromPiece, from: toLocation)
+						let promotedPieceType = PieceType.possiblePawnPromotionResultingTypes().randomElement() ?? .queen
 						let promotedPiece = Piece(type: promotedPieceType, color: color, tag: pieceTagGenerator, zoneId: fromPiece.zoneId)
 						pieceTagGenerator += 1
-						board.setPiece(promotedPiece, at: randomToLocation)
-						boardNode.addPiece(promotedPiece, at: randomToLocation)
+						board.setPiece(promotedPiece, at: toLocation)
+						boardNode.addPiece(promotedPiece, at: toLocation)
 					}
 				}
 			}

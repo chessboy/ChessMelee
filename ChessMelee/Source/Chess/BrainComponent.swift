@@ -34,7 +34,7 @@ final class BrainComponent: OKComponent {
 		}
 	}
 	
-	func boardStrideForPiece(pieceType: Piece.PieceType, inputs: [Float], color: PlayerColor) -> BoardStride? {
+	func boardStrideForPiece(pieceType: PieceType, inputs: [Float], color: PlayerColor) -> BoardStride? {
 		
 		switch pieceType {
 		case .pawn: return boardStrideForPawn(input: PawnMoveModelInput.create(inputs: inputs), color: color)
@@ -142,13 +142,10 @@ final class BrainComponent: OKComponent {
 		
 		return BoardStride(x: x, y: y)
 	}
-}
-
-extension Board {
 	
-	func createInputs(at location: BoardLocation, debug: Bool = false) -> [Float] {
+	func createInputsForBoard(_ board: Board, at location: BoardLocation, debug: Bool = false) -> [Float] {
 		
-		guard let piece = getPiece(at: location) else {
+		guard let piece = board.getPiece(at: location) else {
 			return []
 		}
 		
@@ -172,7 +169,7 @@ extension Board {
 					let stride = BoardStride(x: x, y: y)
 					if location.canIncrement(by: stride) {
 						let testLocation = BoardLocation(x: location.x + x, y: location.y + y)
-						if let testPiece = getPiece(at: testLocation) {
+						if let testPiece = board.getPiece(at: testLocation) {
 							let friendOrEnemy: [Float] = testPiece.color == piece.color ? [1] : [2]
 							asciiBoard += "\(testPiece.asciiChar) "
 							inputs += friendOrEnemy
@@ -205,27 +202,6 @@ extension Board {
 		return inputs
 	}
 }
-
-extension Piece {
-	
-	var asciiChar: Character {
-		switch type {
-		case .rook:
-			return color == .white ? "R" : "r"
-		case .knight:
-			return color == .white ? "N" : "n"
-		case .bishop:
-			return color == .white ? "B" : "b"
-		case .queen:
-			return color == .white ? "Q" : "q"
-		case .king:
-			return color == .white ? "K" : "k"
-		case .pawn:
-			return color == .white ? "P" : "p"
-		}
-	}
-}
-
 
 extension PawnMoveModelInput {
 	
@@ -269,3 +245,39 @@ extension KingMoveModelInput {
 	}
 }
 
+extension Board {
+	
+	func canPieceMove(_ piece: Piece) -> Bool {
+		
+		let stride = [-2, -1, 0, 1, 2]
+		
+		for y: Int in stride {
+			for x in stride {
+				let toLocation = piece.location + BoardLocation(x: x, y: y)
+				if piece.movement.canPieceMove(from: piece.location, to: toLocation, board: self) {
+					return true
+				}
+			}
+		}
+		
+		return false
+	}
+	
+	func possibleMoveLocationsForPieceFaster(_ piece: Piece) -> [BoardLocation] {
+		
+		let stride = [-2, -1, 0, 1, 2]
+		var locations: [BoardLocation] = []
+		
+		for y: Int in stride {
+			for x in stride {
+				let toLocation = piece.location + BoardLocation(x: x, y: y)
+				if piece.movement.canPieceMove(from: piece.location, to: toLocation, board: self) {
+					locations.append(toLocation)
+				}
+			}
+		}
+		
+		return locations
+	}
+
+}

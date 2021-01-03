@@ -102,7 +102,7 @@ final class ChessScene: OKScene {
 				view.showsDrawCount = true
 				view.ignoresSiblingOrder = true
 				view.shouldCullNonVisibleNodes = true
-				view.preferredFramesPerSecond = 30
+				view.preferredFramesPerSecond = 60
 			}
 
         default: break
@@ -170,14 +170,8 @@ final class ChessScene: OKScene {
 			break
 			
 		case Keycode.s:
-			
 			if Constants.Training.guidedTraining, commandDown, let chessComponent = self.entity?.component(ofType: ChessComponent.self) {
-				
-				for piece in Piece.PieceType.allCases {
-					let filename = "training-\(piece.description)"
-					let trainingRecords = chessComponent.trainingRecords[piece]!
-					LocalFileManager.shared.saveTrainingRecordsToFile(trainingRecords, filename: filename)
-				}
+				chessComponent.saveTrainingRecords()
 			}
 			break
 

@@ -21,7 +21,7 @@ let kingMovement = PieceMovementKing()
 
 open class PieceMovement {
     
-    public class func pieceMovement(for pieceType: Piece.PieceType) -> PieceMovement {
+    public class func pieceMovement(for pieceType: PieceType) -> PieceMovement {
         
         switch pieceType {
         case .pawn:

@@ -25,6 +25,11 @@ struct Constants {
 	
 	struct Training {
 		static let guidedTraining = false
+		
+		static let highlightCaptures = false
+		static let highlightPromotions = true
+		static let highlightNoMoves = true
+		static let highlightIllegalMoves = true
 	}
 
 	struct NeuralNetwork {
@@ -41,6 +46,6 @@ struct Constants {
 		static let captureMove = SKColor(red: 0.2, green: 1, blue: 0.2, alpha: 0.85)
 		static let promotionMove = SKColor(red: 1, green: 1, blue: 0.2, alpha: 0.85)
 
-		static let moveLineColor = SKColor(red: 1, green: 0.9, blue: 0, alpha: 1)
+		static let moveLineColor = SKColor(red: 0, green: 0.3, blue: 1, alpha: 1)
 	}
 }

@@ -62,12 +62,9 @@ class BoardNode: SKNode {
 
 		if let squareNode = squareNodeForLocation(location) {
 			
-			let node = SKShapeNode(rectOf: squareNode.size)
+			let node = SKSpriteNode(color: color, size: squareNode.size)
 			node.blendMode = .alpha
-			node.fillColor = color
-			node.lineWidth = 0
 			node.position = squareNode.center
-
 			node.alpha = 0
 			addChild(node)
 			node.run(SKAction.fadeIn(withDuration: 0.25)) {
@@ -76,7 +73,6 @@ class BoardNode: SKNode {
 				}
 			}
 		}
-
 	}
 	
 	func drawLine(loc1: BoardLocation, loc2: BoardLocation, color: SKColor, thickness: CGFloat = 8) {
@@ -95,7 +91,7 @@ class BoardNode: SKNode {
 			node.alpha = 0
 			addChild(node)
 			node.run(SKAction.fadeIn(withDuration: 0.25)) {
-				node.run(SKAction.fadeOut(withDuration: 0.35)) {
+				node.run(SKAction.fadeOut(withDuration: 0.25)) {
 					node.removeFromParent()
 				}
 			}
@@ -131,12 +127,8 @@ class BoardNode: SKNode {
 		
 		if let fromNode = childNode(withName: fromName), let toPosition = squareNodeForLocation(to)?.center {
 			let toName = "piece_\(imageName)_\(String(to.index))"
-			// piecesInMotion.append(toName)
 			fromNode.name = toName
-			fromNode.run(SKAction.move(to: toPosition, duration: 0.25))
-//			{
-//				self.piecesInMotion = self.piecesInMotion.filter({ $0 != toName })
-//			}
+			fromNode.run(SKAction.move(to: toPosition, duration: 0.25).withTimingMode(.easeOut))
 			drawLine(loc1: from, loc2: to, color: Constants.Color.moveLineColor, thickness: 8)
 		}
 	}
@@ -147,7 +139,7 @@ class BoardNode: SKNode {
 		let fromName = "piece_\(imageName)_\(String(from.index))"
 		
 		if let fromNode = childNode(withName: fromName) {
-			let fadeAndRemove = SKAction.fadeOutAndRemove(withDuration: 0.15, timingMode: .linear)
+			let fadeAndRemove = SKAction.fadeOutAndRemove(withDuration: 0.25, timingMode: .linear)
 			fromNode.run(fadeAndRemove)
 		}
 	}

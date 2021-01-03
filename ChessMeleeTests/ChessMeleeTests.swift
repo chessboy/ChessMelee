@@ -105,9 +105,9 @@ class ChessMeleeTests: XCTestCase {
 		
 		var board = Board()
 		
-		let pieces: [Piece.PieceType] = [.rook, .knight, .bishop, .queen, .king, .bishop, .knight, .rook]
+		let pieces: [PieceType] = [.rook, .knight, .bishop, .queen, .king, .bishop, .knight, .rook]
 		
-		func makePiece(type: Piece.PieceType, color: PlayerColor) -> Piece {
+		func makePiece(type: PieceType, color: PlayerColor) -> Piece {
 			return Piece(type: type, color: color)
 		}
 
