@@ -21,6 +21,11 @@ struct Constants {
 		static let showSquareIndices = false
 	}
 
+	struct Window {
+		static let width: CGFloat = Constants.Chessboard.squareDimension * CGFloat(Constants.Chessboard.columnCount)
+		static let height: CGFloat = 600
+	}
+	
 	struct Animation {
 		static let duration: TimeInterval = 0.33
 	}
