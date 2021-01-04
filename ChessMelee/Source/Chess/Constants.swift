@@ -19,6 +19,10 @@ struct Constants {
 		static let squareDimension: CGFloat = 1200/32
 	}
 
+	struct Animation {
+		static let duration: TimeInterval = 0.5
+	}
+	
 	struct Vision {
 		static let dimension = 5
 	}

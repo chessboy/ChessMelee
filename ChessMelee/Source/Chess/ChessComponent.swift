@@ -66,12 +66,15 @@ final class ChessComponent: OKComponent, OKUpdatableComponent {
 		frame = 0
 		lastCaptureFrame = 0
 		pieceTagGenerator = 0
+		zonePointer = 0
+		
 		if !Constants.Training.guidedTraining {
 			accuracyStats = [:]
 			for pieceType in PieceType.allCases {
 				accuracyStats[pieceType] = AccuracyStats()
 			}
 		}
+		
 		(board.getPieces(color: .white) + board.getPieces(color: .black)).forEach({
 			if let piece = board.getPiece(at: $0.location) {
 				boardNode.removePiece(piece, from: $0.location)
@@ -85,12 +88,10 @@ final class ChessComponent: OKComponent, OKUpdatableComponent {
 		// 1 3 5 7 9 11 13 15
 		// 0 2 4 6 8 10 12 14
 		func makePiece(index: Int, type: PieceType, color: PlayerColor) -> Piece {
-			
 			let tag = pieceTagGenerator
 			let zoneId = (index % Constants.Chessboard.columnCount)/(Constants.Chessboard.zoneCount/2) * 2 + (color == .white ? 0 : 1)
 			let piece = Piece(type: type, color: color, tag: tag, zoneId: zoneId)
 			pieceTagGenerator += 1
-			
 			return piece
 		}
 		
