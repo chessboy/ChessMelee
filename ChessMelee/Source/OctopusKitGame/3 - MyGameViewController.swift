@@ -30,7 +30,6 @@ final class MyGameViewController: OKViewController {
         // 🔶 STEP 3.1: You may customize some screen-related settings here, such as the device orientations allowed in your game and status bar visibility etc.
         
         super.viewDidLoad() // ❗️ Required. You must call super.viewDidLoad() before any other code in your overriding implementation.
-        
         #if os(iOS)
         
         supportedInterfaceOrientationsOverride[.phone] = .allButUpsideDown
@@ -43,6 +42,11 @@ final class MyGameViewController: OKViewController {
         
     }
     
+	override func viewDidAppear() {
+		super.viewDidAppear()
+		self.view.window?.title = "AI Chess Melee"
+	}
+
     #if canImport(UIKit) // iOS & tvOS
     
     override func didReceiveMemoryWarning() {

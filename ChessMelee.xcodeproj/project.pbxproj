@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D414BC9F25A31555001ED96C /* QueenMove2Model.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = D414BC9E25A31555001ED96C /* QueenMove2Model.mlmodel */; };
 		D42DF51D2422580A00E0C8D4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D42DF51C2422580A00E0C8D4 /* AppDelegate.swift */; };
 		D42DF51F2422580A00E0C8D4 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D42DF51E2422580A00E0C8D4 /* ContentView.swift */; };
 		D42DF5212422580E00E0C8D4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D42DF5202422580E00E0C8D4 /* Assets.xcassets */; };
@@ -60,6 +61,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		D414BC9E25A31555001ED96C /* QueenMove2Model.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = QueenMove2Model.mlmodel; sourceTree = "<group>"; };
 		D42DF5192422580A00E0C8D4 /* ChessMelee.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ChessMelee.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D42DF51C2422580A00E0C8D4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D42DF51E2422580A00E0C8D4 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -243,6 +245,7 @@
 				D44A065E25A24137004131F0 /* BishopMoveModel.mlmodel */,
 				D44F87EC25A1C04B005D076F /* QueenMoveModel.mlmodel */,
 				D44A065F25A24137004131F0 /* KingMoveModel.mlmodel */,
+				D414BC9E25A31555001ED96C /* QueenMove2Model.mlmodel */,
 			);
 			path = "ML Models";
 			sourceTree = "<group>";
@@ -401,6 +404,7 @@
 				D42DF58E2426A4FB00E0C8D4 /* PieceMovement.swift in Sources */,
 				D4441883259EFFAD005A8534 /* ArrayExtensions.swift in Sources */,
 				D44A066425A24137004131F0 /* KnightMoveModel.mlmodel in Sources */,
+				D414BC9F25A31555001ED96C /* QueenMove2Model.mlmodel in Sources */,
 				D44F877925A0768B005D076F /* GlobalStatsComponent.swift in Sources */,
 				D44F878325A076E1005D076F /* AttributedStringBuilder.swift in Sources */,
 				D44F87E425A1BF0C005D076F /* PawnMoveModel.mlmodel in Sources */,

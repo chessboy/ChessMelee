@@ -16,7 +16,7 @@ struct Constants {
 		static let columnCount = zoneCount * 4
 		static let rowCount = 12
 		static let squareCount = columnCount * rowCount
-		static let squareDimension: CGFloat = 1200/32
+		static let squareDimension: CGFloat = 37.5
 	}
 
 	struct Animation {
