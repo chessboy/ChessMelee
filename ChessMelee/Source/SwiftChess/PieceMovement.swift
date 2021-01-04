@@ -6,7 +6,9 @@
 //
 //
 
-//swiftlint:disable file_length
+/**
+NOTE: heaviliy modified to handle infinite-sized chess board
+*/
 
 import Foundation
 

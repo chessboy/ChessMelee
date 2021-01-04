@@ -12,16 +12,20 @@ import SpriteKit
 struct Constants {
 	
 	struct Chessboard {
+		// you may changes these
 		static let boardCount = 6
+		static let rowCount = 12
+		static let squareDimension: CGFloat = 37.5
+
+		// you shouldn't need to change these
 		static let zoneCount = boardCount * 2
 		static let columnCount = zoneCount * 4
-		static let rowCount = 12
 		static let squareCount = columnCount * rowCount
-		static let squareDimension: CGFloat = 37.5
 		static let showSquareIndices = false
 	}
 
 	struct Window {
+		// you may changes these
 		static let width: CGFloat = Constants.Chessboard.squareDimension * CGFloat(Constants.Chessboard.columnCount)
 		static let height: CGFloat = 600
 	}
@@ -32,7 +36,7 @@ struct Constants {
 		
 	struct Training {
 		static let guidedTraining = false
-		
+		static let epochEndNoCaptureCount = 200
 		static let highlightCaptures = false
 		static let highlightPromotions = true
 		static let highlightNoMoves = true

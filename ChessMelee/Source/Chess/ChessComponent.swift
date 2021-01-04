@@ -130,7 +130,7 @@ final class ChessComponent: OKComponent, OKUpdatableComponent {
 		}
 		
 		if frame > 500, frame.isMultiple(of: 30) {
-			if frame - lastCaptureFrame > (Constants.Training.guidedTraining ? 200 : 100) {
+			if frame - lastCaptureFrame > (Constants.Training.guidedTraining ? Constants.Training.epochEndNoCaptureCount : Constants.Training.epochEndNoCaptureCount/2) {
 				setupBoard()
 				return
 			}

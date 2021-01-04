@@ -6,6 +6,10 @@
 //  Copyright © 2017 Steve Barnegren. All rights reserved.
 //
 
+/**
+NOTE: heaviliy modified to handle infinite-sized chess board
+*/
+
 import Foundation
 
 public struct BoardLocation: Equatable {

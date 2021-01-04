@@ -6,6 +6,10 @@
 //
 //
 
+/**
+NOTE: heaviliy modified to handle infinite-sized chess board
+*/
+
 import Foundation
 
 public enum PlayerColor: String, CaseIterable {
