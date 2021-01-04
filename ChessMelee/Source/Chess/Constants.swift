@@ -20,7 +20,7 @@ struct Constants {
 	}
 
 	struct Animation {
-		static let duration: TimeInterval = 0.5
+		static let duration: TimeInterval = 0.33
 	}
 	
 	struct Vision {
@@ -38,7 +38,7 @@ struct Constants {
 
 	struct NeuralNetwork {
 		static let visibleSquareCount = (Vision.dimension * Vision.dimension) - 1 // 24 squares for 5x5 grid not including origin
-		static let inputCount = visibleSquareCount * 2
+		static let inputCount = visibleSquareCount
 	}
 	
 	struct Color {

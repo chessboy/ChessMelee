@@ -50,7 +50,7 @@ final class BrainComponent: OKComponent {
 				
 		do {
 			if let prediction = try pawnMoveModel?.prediction(input: input) {
-				return outputIndexToStride(index: Int(prediction.output), color: color)
+				return BrainComponent.outputIndexToStride(visionDimension: Constants.Vision.dimension, index: Int(prediction.output), color: color)
 			}
 		} catch let error {
 			print("error making prediction for pawn: \(error.localizedDescription)")
@@ -63,7 +63,7 @@ final class BrainComponent: OKComponent {
 				
 		do {
 			if let prediction = try rookMoveModel?.prediction(input: input) {
-				return outputIndexToStride(index: Int(prediction.output), color: color)
+				return BrainComponent.outputIndexToStride(visionDimension: Constants.Vision.dimension, index: Int(prediction.output), color: color)
 			}
 		} catch let error {
 			print("error making prediction for rook: \(error.localizedDescription)")
@@ -76,7 +76,7 @@ final class BrainComponent: OKComponent {
 				
 		do {
 			if let prediction = try knightMoveModel?.prediction(input: input) {
-				return outputIndexToStride(index: Int(prediction.output), color: color)
+				return BrainComponent.outputIndexToStride(visionDimension: Constants.Vision.dimension, index: Int(prediction.output), color: color)
 			}
 		} catch let error {
 			print("error making prediction for knight: \(error.localizedDescription)")
@@ -89,7 +89,7 @@ final class BrainComponent: OKComponent {
 				
 		do {
 			if let prediction = try bishopMoveModel?.prediction(input: input) {
-				return outputIndexToStride(index: Int(prediction.output), color: color)
+				return BrainComponent.outputIndexToStride(visionDimension: Constants.Vision.dimension, index: Int(prediction.output), color: color)
 			}
 		} catch let error {
 			print("error making prediction for bishop: \(error.localizedDescription)")
@@ -102,7 +102,7 @@ final class BrainComponent: OKComponent {
 				
 		do {
 			if let prediction = try queenMoveModel?.prediction(input: input) {
-				return outputIndexToStride(index: Int(prediction.output), color: color)
+				return BrainComponent.outputIndexToStride(visionDimension: Constants.Vision.dimension, index: Int(prediction.output), color: color)
 			}
 		} catch let error {
 			print("error making prediction for queen: \(error.localizedDescription)")
@@ -115,7 +115,7 @@ final class BrainComponent: OKComponent {
 				
 		do {
 			if let prediction = try kingMoveModel?.prediction(input: input) {
-				return outputIndexToStride(index: Int(prediction.output), color: color)
+				return BrainComponent.outputIndexToStride(visionDimension: Constants.Vision.dimension, index: Int(prediction.output), color: color)
 			}
 		} catch let error {
 			print("error making prediction for king: \(error.localizedDescription)")
@@ -123,11 +123,13 @@ final class BrainComponent: OKComponent {
 
 		return nil
 	}
+}
 
-	func outputIndexToStride(index: Int, color: PlayerColor) -> BoardStride {
+extension BrainComponent {
+	
+	static func outputIndexToStride(visionDimension: Int, index: Int, color: PlayerColor) -> BoardStride {
 		
-		let visionDimension = Constants.Vision.dimension
-		let visionDimensionOver2 = Constants.Vision.dimension / 2
+		let visionDimensionOver2 = visionDimension / 2
 		let centerIndex = (visionDimension * visionDimension) / 2
 
 		let adjustForCenter = index < centerIndex ? 0 : 1
@@ -138,20 +140,22 @@ final class BrainComponent: OKComponent {
 		x *= inverter
 		y *= inverter
 		
-		//print("index: \(index), color: \(color), x: \(x), y: \(y)")
+		//print("visionDimension: \(visionDimension), index: \(index), color: \(color), x: \(x), y: \(y)")
 		
 		return BoardStride(x: x, y: y)
 	}
 	
-	func createInputsForBoard(_ board: Board, at location: BoardLocation, debug: Bool = false) -> [Float] {
+	static func createInputsForBoard(_ board: Board, at location: BoardLocation, visionDimension: Int, debug: Bool = false) -> [Float] {
 		
 		guard let piece = board.getPiece(at: location) else {
 			return []
 		}
 		
-		let stride = [-2, -1, 0, 1, 2]
-		let yStride = piece.color == .black ? stride : stride.reversed()
-		let xStride = piece.color == .white ? stride : stride.reversed()
+		let visionDimensionOver2 = visionDimension/2
+		let visionStride = Array(stride(from: -visionDimensionOver2, through: visionDimensionOver2, by: 1))
+
+		let yStride = piece.color == .black ? visionStride : visionStride.reversed()
+		let xStride = piece.color == .white ? visionStride : visionStride.reversed()
 
 		var inputs: [Float] = []
 		// print(inputs)
@@ -201,6 +205,7 @@ final class BrainComponent: OKComponent {
 		
 		return inputs
 	}
+
 }
 
 extension PawnMoveModelInput {

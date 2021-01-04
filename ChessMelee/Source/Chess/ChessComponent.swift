@@ -249,7 +249,7 @@ final class ChessComponent: OKComponent, OKUpdatableComponent {
 		accuracyStats[fromPiece.type]!.attemptedMoveCount += 1
 		// boardNode.highlightSquare(location: randomFromLocation, color: .yellow)
 
-		let inputs = brainComponent!.createInputsForBoard(board, at: fromLocation)
+		let inputs = BrainComponent.createInputsForBoard(board, at: fromLocation, visionDimension: Constants.Vision.dimension)
 		let predictedBoardStride = brainComponent!.boardStrideForPiece(pieceType: fromPiece.type, inputs: inputs, color: color)
 
 		guard let boardStride = predictedBoardStride else {
@@ -342,7 +342,7 @@ final class ChessComponent: OKComponent, OKUpdatableComponent {
 					})
 					
 					if shiftDown {
-						let _ = brainComponent!.createInputsForBoard(board, at: boardLoc, debug: true)
+						let _ = BrainComponent.createInputsForBoard(board, at: boardLoc, visionDimension: Constants.Vision.dimension, debug: true)
 					}
 				}
 			}
@@ -374,7 +374,7 @@ final class ChessComponent: OKComponent, OKUpdatableComponent {
 						
 			if let toLocation = captures.first ?? moves.randomElement() {
 				
-				let inputs = brainComponent!.createInputsForBoard(board, at: fromLocation)
+				let inputs = BrainComponent.createInputsForBoard(board, at: fromLocation, visionDimension: Constants.Vision.dimension)
 				let stride = fromLocation.strideTo(location: toLocation)
 				let inverter = fromPiece.color == .white ? 1 : -1
 

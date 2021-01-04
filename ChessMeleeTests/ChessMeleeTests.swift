@@ -22,12 +22,14 @@ class ChessMeleeTests: XCTestCase {
 	func testInputs() throws {
 		print()
 		let board = createBoard()
-		let inputs1 = board.createInputs(at: BoardLocation(index: 0), debug: true)
-		let inputs2 = board.createInputs(at: BoardLocation(index: 767), debug: true)
-		
+		let piece1 = board.getPiece(at: BoardLocation(index: 0))
+		let piece2 = board.getPiece(at: BoardLocation(index: 767))
+		let inputs1 = BrainComponent.createInputsForBoard(board, at: piece1!.location)
+		let inputs2 = BrainComponent.createInputsForBoard(board, at: piece2!.location)
+
 		print(inputs1.map({Int($0)}))
 		print(inputs2.map({Int($0)}))
-		
+
 		XCTAssert(inputs1.count == Constants.NeuralNetwork.inputCount)
 		XCTAssert(inputs2.count == Constants.NeuralNetwork.inputCount)
 		XCTAssert(inputs1 == inputs2)
@@ -55,19 +57,17 @@ class ChessMeleeTests: XCTestCase {
 	*/
 	func testIndexing() throws {
 		
-		let visionDimension = Constants.Vision.dimension
-		let visionDimensionOver2 = Constants.Vision.dimension / 2
+		let visionDimension = 5
+		let visionDimensionOver2 = visionDimension/2
 		let centerIndex = (visionDimension * visionDimension) / 2
+		print("visionDimension: \(visionDimension), visionDimensionOver2: \(visionDimensionOver2), centerIndex: \(centerIndex)")
 
-		for index in 0...23 {
+		for index in 0..<visionDimension * visionDimension - 1 {
 
-			var x = -1
-			var y = -1
 			let adjustForCenter = index < centerIndex ? 0 : 1
-			x = ((index+adjustForCenter) % visionDimension) - visionDimensionOver2
-			y = visionDimensionOver2 - ((index+adjustForCenter) / visionDimension)
-
-			print("white: \(index), x: \(x), y: \(y) - black: \(index), x: \(-x), y: \(-y)")
+			let x = ((index+adjustForCenter) % visionDimension) - visionDimensionOver2
+			let y = visionDimensionOver2 - ((index+adjustForCenter) / visionDimension)
+			print("white: \(index), x: \(x), y: \(y)")
 		}
 	}
 	
@@ -82,53 +82,68 @@ class ChessMeleeTests: XCTestCase {
 	*/
 	func testReverseIndexing() throws {
 		
-		let visionDimension = Constants.Vision.dimension
+		let visionDimension = 5
+		let visionDimensionOver2 = visionDimension/2
 		let centerIndex = (visionDimension * visionDimension) / 2
+		
+		XCTAssert(visionDimension % 2 == 1)
+		
+		print("visionDimension: \(visionDimension), visionDimensionOver2: \(visionDimensionOver2), centerIndex: \(centerIndex)")
+		
+		let visionStride = Array(stride(from: -visionDimensionOver2, through: visionDimensionOver2, by: 1))
+		let xStride = visionStride						// [-3, -2, -1, 0, 1, 2, 3]
+		let yStride = visionStride.reversed()			// [3, 2, 1, 0, -1, -2, -3]
 
-		let xStride = [-2, -1, 0, 1, 2]
-		let yStride = [-2, -1, 0, 1, 2].reversed()
-
-		for y: Int in yStride {
-			for x in xStride {
+		var counter = 0
+		for y: Int in yStride {									// [3, 2, 1, 0, -1, -2, -3]
+			for x in xStride {									// [-3, -2, -1, 0, 1, 2, 3]
 				if !(x == 0 && y == 0) {
-					var index = -(y-2)*visionDimension + (x + 2)
+					let rank = -y + visionDimensionOver2		// [6, 5, 4, 3, 4, 5, 6]
+					let file = x + visionDimensionOver2 		// [0, 1, 2, 3, 4, 5, 6]
+					var index = rank*visionDimension + file
 					if index >= centerIndex {
 						index -= 1
 					}
-					print("x: \(x), y: \(y), index:\(index)")
+					print("[\(counter)] y: \(y), x: \(x), rank: \(rank), file: \(file) --> index: \(index)")
+					counter += 1
 				}
 			}
 		}
+		
+		XCTAssert(counter == visionDimension * visionDimension - 1)
 	}
 
 	func createBoard() -> Board {
 		
+		var tagGenerator = 0
 		var board = Board()
 		
 		let pieces: [PieceType] = [.rook, .knight, .bishop, .queen, .king, .bishop, .knight, .rook]
 		
-		func makePiece(type: PieceType, color: PlayerColor) -> Piece {
-			return Piece(type: type, color: color)
+		func makePiece(index: Int, type: PieceType, color: PlayerColor) -> Piece {
+			let zoneId = (index % Constants.Chessboard.columnCount)/(Constants.Chessboard.zoneCount/2) * 2 + (color == .white ? 0 : 1)
+			tagGenerator += 1
+			return Piece(type: type, color: color, tag: tagGenerator, zoneId: zoneId)
 		}
 
 		// white bottom row
 		for i in 0...63 {
-			board.setPiece(makePiece(type: pieces[i%8], color: .white), at: BoardLocation(index: i))
+			board.setPiece(makePiece(index: i, type: pieces[i%8], color: .white), at: BoardLocation(index: i))
 		}
 
 		// white pawn row
 		for i in 64...127 {
-			board.setPiece(makePiece(type: .pawn, color: .white), at: BoardLocation(index: i))
+			board.setPiece(makePiece(index: i, type: .pawn, color: .white), at: BoardLocation(index: i))
 		}
 		
 		// black bottom row
 		for i in 704...767 {
-			board.setPiece(makePiece(type: pieces[i%8], color: .black), at: BoardLocation(index: i))
+			board.setPiece(makePiece(index: i, type: pieces[i%8], color: .black), at: BoardLocation(index: i))
 		}
 
 		// black pawn row
 		for i in 640...703 {
-			board.setPiece(makePiece(type: .pawn, color: .black), at: BoardLocation(index: i))
+			board.setPiece(makePiece(index: i, type: .pawn, color: .black), at: BoardLocation(index: i))
 		}
 
 		return board
