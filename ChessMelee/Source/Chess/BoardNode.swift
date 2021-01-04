@@ -40,12 +40,14 @@ class BoardNode: SKNode {
 				square.name = "\(index)"
 				self.addChild(square)
 				
-//				let lableNode = SKLabelNode(text: "\(index)")
-//				lableNode.font.size = 12
-//				lableNode.fontColor = .black
-//				lableNode.zPosition = 100
-//				lableNode.position = CGPoint(x: 0, y: -5)
-//				square.addChild(lableNode)
+				if Constants.Chessboard.showSquareIndices {
+					let lableNode = SKLabelNode(text: "\(index)")
+					lableNode.font.size = 12
+					lableNode.fontColor = .black
+					lableNode.zPosition = 100
+					lableNode.position = CGPoint(x: 0, y: -5)
+					square.addChild(lableNode)
+				}
 				
 				toggle = !toggle
 				index += 1

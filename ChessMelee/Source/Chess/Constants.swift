@@ -12,11 +12,13 @@ import SpriteKit
 struct Constants {
 	
 	struct Chessboard {
-		static let zoneCount = 16
+		static let boardCount = 6
+		static let zoneCount = boardCount * 2
 		static let columnCount = zoneCount * 4
 		static let rowCount = 12
 		static let squareCount = columnCount * rowCount
 		static let squareDimension: CGFloat = 37.5
+		static let showSquareIndices = false
 	}
 
 	struct Animation {

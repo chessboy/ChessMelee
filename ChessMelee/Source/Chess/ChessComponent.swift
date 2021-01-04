@@ -89,8 +89,9 @@ final class ChessComponent: OKComponent, OKUpdatableComponent {
 		// 0 2 4 6 8 10 12 14
 		func makePiece(index: Int, type: PieceType, color: PlayerColor) -> Piece {
 			let tag = pieceTagGenerator
-			let zoneId = (index % Constants.Chessboard.columnCount)/(Constants.Chessboard.zoneCount/2) * 2 + (color == .white ? 0 : 1)
+			let zoneId = (index % Constants.Chessboard.columnCount)/8 * 2 + (color == .white ? 0 : 1)
 			let piece = Piece(type: type, color: color, tag: tag, zoneId: zoneId)
+			//print("piece added: \(piece.description) at: \(index) in: \(zoneId)")
 			pieceTagGenerator += 1
 			return piece
 		}
