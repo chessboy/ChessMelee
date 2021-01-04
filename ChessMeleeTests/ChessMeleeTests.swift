@@ -34,17 +34,6 @@ class ChessMeleeTests: XCTestCase {
 		XCTAssert(inputs2.count == Constants.NeuralNetwork.inputCount)
 		XCTAssert(inputs1 == inputs2)
 	}
-	
-	func testTiming() throws {
-		
-		// gen 0: 200 --> gen 100: 3200
-				
-		for gen: Float in stride(from: 0, through: 120, by: 1) {
-			let trajectory = log10(min(gen, 100) + 3)
-			let ticks = Int(trajectory * trajectory * 1000)
-			print("gen: \(gen), log(gen): \(ticks)")
-		}
-	}
 
 	/**
 		 00 01 02 03 04

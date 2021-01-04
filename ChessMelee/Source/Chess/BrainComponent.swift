@@ -34,7 +34,7 @@ final class BrainComponent: OKComponent {
 		}
 	}
 	
-	func boardStrideForPiece(pieceType: PieceType, inputs: [Float], color: PlayerColor) -> BoardStride? {
+	func boardStrideForPiece(pieceType: PieceType, inputs: [Int], color: PlayerColor) -> BoardStride? {
 		
 		switch pieceType {
 		case .pawn: return boardStrideForPawn(input: PawnMoveModelInput.create(inputs: inputs), color: color)
@@ -145,7 +145,7 @@ extension BrainComponent {
 		return BoardStride(x: x, y: y)
 	}
 	
-	static func createInputsForBoard(_ board: Board, at location: BoardLocation, visionDimension: Int, debug: Bool = false) -> [Float] {
+	static func createInputsForBoard(_ board: Board, at location: BoardLocation, visionDimension: Int, debug: Bool = false) -> [Int] {
 		
 		guard let piece = board.getPiece(at: location) else {
 			return []
@@ -157,7 +157,7 @@ extension BrainComponent {
 		let yStride = piece.color == .black ? visionStride : visionStride.reversed()
 		let xStride = piece.color == .white ? visionStride : visionStride.reversed()
 
-		var inputs: [Float] = []
+		var inputs: [Int] = []
 		// print(inputs)
 		
 		var asciiBoard = "" // only needed for debugging
@@ -174,7 +174,7 @@ extension BrainComponent {
 					if location.canIncrement(by: stride) {
 						let testLocation = BoardLocation(x: location.x + x, y: location.y + y)
 						if let testPiece = board.getPiece(at: testLocation) {
-							let friendOrEnemy: [Float] = testPiece.color == piece.color ? [1] : [2]
+							let friendOrEnemy: [Int] = testPiece.color == piece.color ? [1] : [2]
 							asciiBoard += "\(testPiece.asciiChar) "
 							inputs += friendOrEnemy
 							
@@ -210,42 +210,42 @@ extension BrainComponent {
 
 extension PawnMoveModelInput {
 	
-	static func create(inputs: [Float]) -> PawnMoveModelInput {
+	static func create(inputs: [Int]) -> PawnMoveModelInput {
 		return PawnMoveModelInput(inputs_0: Double(inputs[0]), inputs_1: Double(inputs[1]), inputs_2: Double(inputs[2]), inputs_3: Double(inputs[3]), inputs_4: Double(inputs[4]), inputs_5: Double(inputs[5]), inputs_6: Double(inputs[6]), inputs_7: Double(inputs[7]), inputs_8: Double(inputs[8]), inputs_9: Double(inputs[9]), inputs_10: Double(inputs[10]), inputs_11: Double(inputs[11]), inputs_12: Double(inputs[12]), inputs_13: Double(inputs[13]), inputs_14: Double(inputs[14]), inputs_15: Double(inputs[15]), inputs_16: Double(inputs[16]), inputs_17: Double(inputs[17]), inputs_18: Double(inputs[18]), inputs_19: Double(inputs[19]), inputs_20: Double(inputs[20]), inputs_21: Double(inputs[21]), inputs_22: Double(inputs[22]), inputs_23: Double(inputs[23]))
 	}
 }
 
 extension RookMoveModelInput {
 	
-	static func create(inputs: [Float]) -> RookMoveModelInput {
+	static func create(inputs: [Int]) -> RookMoveModelInput {
 		return RookMoveModelInput(inputs_0: Double(inputs[0]), inputs_1: Double(inputs[1]), inputs_2: Double(inputs[2]), inputs_3: Double(inputs[3]), inputs_4: Double(inputs[4]), inputs_5: Double(inputs[5]), inputs_6: Double(inputs[6]), inputs_7: Double(inputs[7]), inputs_8: Double(inputs[8]), inputs_9: Double(inputs[9]), inputs_10: Double(inputs[10]), inputs_11: Double(inputs[11]), inputs_12: Double(inputs[12]), inputs_13: Double(inputs[13]), inputs_14: Double(inputs[14]), inputs_15: Double(inputs[15]), inputs_16: Double(inputs[16]), inputs_17: Double(inputs[17]), inputs_18: Double(inputs[18]), inputs_19: Double(inputs[19]), inputs_20: Double(inputs[20]), inputs_21: Double(inputs[21]), inputs_22: Double(inputs[22]), inputs_23: Double(inputs[23]))
 	}
 }
 
 extension KnightMoveModelInput {
 	
-	static func create(inputs: [Float]) -> KnightMoveModelInput {
+	static func create(inputs: [Int]) -> KnightMoveModelInput {
 		return KnightMoveModelInput(inputs_0: Double(inputs[0]), inputs_1: Double(inputs[1]), inputs_2: Double(inputs[2]), inputs_3: Double(inputs[3]), inputs_4: Double(inputs[4]), inputs_5: Double(inputs[5]), inputs_6: Double(inputs[6]), inputs_7: Double(inputs[7]), inputs_8: Double(inputs[8]), inputs_9: Double(inputs[9]), inputs_10: Double(inputs[10]), inputs_11: Double(inputs[11]), inputs_12: Double(inputs[12]), inputs_13: Double(inputs[13]), inputs_14: Double(inputs[14]), inputs_15: Double(inputs[15]), inputs_16: Double(inputs[16]), inputs_17: Double(inputs[17]), inputs_18: Double(inputs[18]), inputs_19: Double(inputs[19]), inputs_20: Double(inputs[20]), inputs_21: Double(inputs[21]), inputs_22: Double(inputs[22]), inputs_23: Double(inputs[23]))
 	}
 }
 
 extension BishopMoveModelInput {
 	
-	static func create(inputs: [Float]) -> BishopMoveModelInput {
+	static func create(inputs: [Int]) -> BishopMoveModelInput {
 		return BishopMoveModelInput(inputs_0: Double(inputs[0]), inputs_1: Double(inputs[1]), inputs_2: Double(inputs[2]), inputs_3: Double(inputs[3]), inputs_4: Double(inputs[4]), inputs_5: Double(inputs[5]), inputs_6: Double(inputs[6]), inputs_7: Double(inputs[7]), inputs_8: Double(inputs[8]), inputs_9: Double(inputs[9]), inputs_10: Double(inputs[10]), inputs_11: Double(inputs[11]), inputs_12: Double(inputs[12]), inputs_13: Double(inputs[13]), inputs_14: Double(inputs[14]), inputs_15: Double(inputs[15]), inputs_16: Double(inputs[16]), inputs_17: Double(inputs[17]), inputs_18: Double(inputs[18]), inputs_19: Double(inputs[19]), inputs_20: Double(inputs[20]), inputs_21: Double(inputs[21]), inputs_22: Double(inputs[22]), inputs_23: Double(inputs[23]))
 	}
 }
 
 extension QueenMoveModelInput {
 	
-	static func create(inputs: [Float]) -> QueenMoveModelInput {
+	static func create(inputs: [Int]) -> QueenMoveModelInput {
 		return QueenMoveModelInput(inputs_0: Double(inputs[0]), inputs_1: Double(inputs[1]), inputs_2: Double(inputs[2]), inputs_3: Double(inputs[3]), inputs_4: Double(inputs[4]), inputs_5: Double(inputs[5]), inputs_6: Double(inputs[6]), inputs_7: Double(inputs[7]), inputs_8: Double(inputs[8]), inputs_9: Double(inputs[9]), inputs_10: Double(inputs[10]), inputs_11: Double(inputs[11]), inputs_12: Double(inputs[12]), inputs_13: Double(inputs[13]), inputs_14: Double(inputs[14]), inputs_15: Double(inputs[15]), inputs_16: Double(inputs[16]), inputs_17: Double(inputs[17]), inputs_18: Double(inputs[18]), inputs_19: Double(inputs[19]), inputs_20: Double(inputs[20]), inputs_21: Double(inputs[21]), inputs_22: Double(inputs[22]), inputs_23: Double(inputs[23]))
 	}
 }
 	
 extension KingMoveModelInput {
 	
-	static func create(inputs: [Float]) -> KingMoveModelInput {
+	static func create(inputs: [Int]) -> KingMoveModelInput {
 		return KingMoveModelInput(inputs_0: Double(inputs[0]), inputs_1: Double(inputs[1]), inputs_2: Double(inputs[2]), inputs_3: Double(inputs[3]), inputs_4: Double(inputs[4]), inputs_5: Double(inputs[5]), inputs_6: Double(inputs[6]), inputs_7: Double(inputs[7]), inputs_8: Double(inputs[8]), inputs_9: Double(inputs[9]), inputs_10: Double(inputs[10]), inputs_11: Double(inputs[11]), inputs_12: Double(inputs[12]), inputs_13: Double(inputs[13]), inputs_14: Double(inputs[14]), inputs_15: Double(inputs[15]), inputs_16: Double(inputs[16]), inputs_17: Double(inputs[17]), inputs_18: Double(inputs[18]), inputs_19: Double(inputs[19]), inputs_20: Double(inputs[20]), inputs_21: Double(inputs[21]), inputs_22: Double(inputs[22]), inputs_23: Double(inputs[23]))
 	}
 }

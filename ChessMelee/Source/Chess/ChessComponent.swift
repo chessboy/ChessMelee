@@ -12,7 +12,7 @@ import OctopusKit
 
 struct TrainingRecord: Codable {
 	var pieceType: PieceType
-	var inputs: [Float]
+	var inputs: [Int]
 	var output: Int
 }
 
