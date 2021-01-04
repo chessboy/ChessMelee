@@ -18,3 +18,5 @@ Edit `Constants.swift`:
 
 Have fun!
 
+## Notes
+Requires macOS 11 (Big Sur)
