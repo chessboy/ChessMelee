@@ -63,7 +63,7 @@ final class GlobalStatsComponent: OKComponent, OKUpdatableComponent {
 		let rect = CGRect(x: parentFrame.minX, y: 0, width: parentFrame.width, height: height)
 		maskNode = SKShapeNode(rect: rect)
 		maskNode.lineWidth = 0
-		maskNode.fillColor = SKColor(white: 0, alpha: 0.05) // 0.75
+		maskNode.fillColor = .clear//SKColor(white: 0, alpha: 0.75)
 		maskNode.position = CGPoint(x: 0, y: parentFrame.origin.y)
 		maskNode.zPosition = 200
 

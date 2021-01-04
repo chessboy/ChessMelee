@@ -33,6 +33,17 @@ public enum PieceType: Int, CaseIterable, CustomStringConvertible, Codable {
 	case queen
 	case king
 	
+	var visionDimension: Int {
+		switch self {
+		case .pawn: return 5
+		case .rook: return 7 		// --> 11 max
+		case .knight: return 5
+		case .bishop: return 7		// --> 11 max
+		case .queen: return 7		// --> 11 max
+		case .king: return 3
+		}
+	}
+	
 	var value: Double {
 		switch self {
 		case .pawn: return 1

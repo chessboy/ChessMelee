@@ -22,11 +22,7 @@ struct Constants {
 	struct Animation {
 		static let duration: TimeInterval = 0.33
 	}
-	
-	struct Vision {
-		static let dimension = 5
-	}
-	
+		
 	struct Training {
 		static let guidedTraining = false
 		
@@ -34,11 +30,6 @@ struct Constants {
 		static let highlightPromotions = true
 		static let highlightNoMoves = true
 		static let highlightIllegalMoves = true
-	}
-
-	struct NeuralNetwork {
-		static let visibleSquareCount = (Vision.dimension * Vision.dimension) - 1 // 24 squares for 5x5 grid not including origin
-		static let inputCount = visibleSquareCount
 	}
 	
 	struct Color {

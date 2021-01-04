@@ -12,7 +12,34 @@ class LocalFileManager {
 	
 	static let shared = LocalFileManager()
 		
-	public func saveTrainingRecordsToFile(_ trainingRecords: [TrainingRecord], filename: String, fileExtension: String = "json") {
+	public func saveTrainingRecordsToCsvFile(_ trainingRecords: [TrainingRecord], for pieceType: PieceType) {
+		let fileExtension = "csv"
+		let filename = "training-\(pieceType.description)"
+
+		var rawText = ""
+		var columnText = ""
+		let columnCount = pieceType.visionDimension * pieceType.visionDimension - 1
+		for column in stride(from: 0, to: columnCount, by: 1) {
+			columnText += "inputs_\(column),"
+		}
+		
+		rawText += "\(columnText)output\n"
+		for trainingRecord in trainingRecords {
+			rawText += trainingRecord.inputs.map({ String($0) }).joined(separator: ",") + ",\(trainingRecord.output)\n"
+		}
+		
+		if let data = rawText.data(using: .nonLossyASCII) {
+			if let url = saveDataFile(filename, fileExtension: fileExtension, data: data) {
+				print("saved saveState: \(url)")
+			}
+		} else {
+			print("could not encode training records as nonLossyASCII to \(filename).\(fileExtension)")
+		}
+	}
+
+	public func saveTrainingRecordsToJsonFile(_ trainingRecords: [TrainingRecord], for pieceType: PieceType) {
+		let fileExtension = "json"
+		let filename = "training-\(pieceType.description)"
 
 		do {
 			let encoder = JSONEncoder()
@@ -22,7 +49,7 @@ class LocalFileManager {
 			}
 
 		} catch {
-			print("could not encode saveState as \(filename).\(fileExtension): reason: \(error.localizedDescription)")
+			print("could not encode training records as \(filename).\(fileExtension): reason: \(error.localizedDescription)")
 		}
 	}
 		

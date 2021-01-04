@@ -249,7 +249,7 @@ final class ChessComponent: OKComponent, OKUpdatableComponent {
 		accuracyStats[fromPiece.type]!.attemptedMoveCount += 1
 		// boardNode.highlightSquare(location: randomFromLocation, color: .yellow)
 
-		let inputs = BrainComponent.createInputsForBoard(board, at: fromLocation, visionDimension: Constants.Vision.dimension)
+		let inputs = BrainComponent.createInputsForBoard(board, at: fromLocation)
 		let predictedBoardStride = brainComponent!.boardStrideForPiece(pieceType: fromPiece.type, inputs: inputs, color: color)
 
 		guard let boardStride = predictedBoardStride else {
@@ -313,10 +313,10 @@ final class ChessComponent: OKComponent, OKUpdatableComponent {
 	}
 	
 	func saveTrainingRecords() {
-		for piece in PieceType.allCases {
-			let filename = "training-\(piece.description)"
-			let trainingRecordsForPiece = trainingRecords[piece]!
-			LocalFileManager.shared.saveTrainingRecordsToFile(trainingRecordsForPiece, filename: filename)
+		for pieceType in PieceType.allCases {
+			let trainingRecordsForPiece = trainingRecords[pieceType]!
+			//LocalFileManager.shared.saveTrainingRecordsToJsonFile(trainingRecordsForPiece, for: pieceType)
+			LocalFileManager.shared.saveTrainingRecordsToCsvFile(trainingRecordsForPiece, for: pieceType)
 		}
 	}
 	
@@ -335,21 +335,25 @@ final class ChessComponent: OKComponent, OKUpdatableComponent {
 						return
 					}
 					
-					let moves = board.possibleMoveLocationsForPiece(atLocation: boardLoc)
+					var moves = board.possibleMoveLocationsForPieceFaster(piece)
+					moves = moves.filter({
+						abs(boardLoc.x - $0.x) <= piece.type.visionDimension && abs(boardLoc.y - $0.y) <= piece.type.visionDimension
+					})
+
 					print("moves at \(boardLoc.index) for \(piece.color) \(piece.type.char) are \(moves)")
 					moves.forEach({
-						boardNode.drawLine(loc1: boardLoc, loc2: $0, color: Constants.Color.moveLineColor, thickness: 4)
+						boardNode.drawLine(loc1: boardLoc, loc2: $0, color: .red, thickness: 6)
 					})
 					
 					if shiftDown {
-						let _ = BrainComponent.createInputsForBoard(board, at: boardLoc, visionDimension: Constants.Vision.dimension, debug: true)
+						let _ = BrainComponent.createInputsForBoard(board, at: boardLoc, debug: true)
 					}
 				}
 			}
 		}
 	}
 		
-	// pawn 	3x2
+	// pawn 	5x5 or maybe 3x3
 	// knight	5x5
 	// bishop	7x7
 	// queen	7x7
@@ -363,7 +367,7 @@ final class ChessComponent: OKComponent, OKUpdatableComponent {
 			
 			var moves = board.possibleMoveLocationsForPieceFaster(fromPiece)
 			moves = moves.filter({
-				abs(fromLocation.x - $0.x) <= 5 && abs(fromLocation.y - $0.y) <= 5
+				abs(fromLocation.x - $0.x) <= fromPiece.type.visionDimension && abs(fromLocation.y - $0.y) <= fromPiece.type.visionDimension
 			})
 			
 			let captures = moves.filter({ location in
@@ -374,14 +378,17 @@ final class ChessComponent: OKComponent, OKUpdatableComponent {
 						
 			if let toLocation = captures.first ?? moves.randomElement() {
 				
-				let inputs = BrainComponent.createInputsForBoard(board, at: fromLocation, visionDimension: Constants.Vision.dimension)
+				let visionDimension = fromPiece.type.visionDimension
+				let visionDimensionOver2 = visionDimension/2
+				let centerIndex = (visionDimension * visionDimension) / 2
+				
+				let inputs = BrainComponent.createInputsForBoard(board, at: fromLocation)
 				let stride = fromLocation.strideTo(location: toLocation)
 				let inverter = fromPiece.color == .white ? 1 : -1
 
-				let visionDimension = Constants.Vision.dimension
-				let centerIndex = (visionDimension * visionDimension) / 2
-
-				var outputIndex = -(stride.y * inverter-2)*visionDimension + (stride.x * inverter + 2)
+				let rank = -stride.y * inverter + visionDimensionOver2
+				let file = stride.x * inverter + visionDimensionOver2
+				var outputIndex = rank*visionDimension + file
 				if outputIndex >= centerIndex {
 					outputIndex -= 1
 				}

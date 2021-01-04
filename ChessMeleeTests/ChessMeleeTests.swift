@@ -30,8 +30,11 @@ class ChessMeleeTests: XCTestCase {
 		print(inputs1.map({Int($0)}))
 		print(inputs2.map({Int($0)}))
 
-		XCTAssert(inputs1.count == Constants.NeuralNetwork.inputCount)
-		XCTAssert(inputs2.count == Constants.NeuralNetwork.inputCount)
+		let piece1InputCount = (piece1!.type.visionDimension * piece1!.type.visionDimension) - 1
+		let piece2InputCount = (piece2!.type.visionDimension * piece1!.type.visionDimension) - 1
+
+		XCTAssert(inputs1.count == piece1InputCount)
+		XCTAssert(inputs2.count == piece2InputCount)
 		XCTAssert(inputs1 == inputs2)
 	}
 
@@ -58,6 +61,10 @@ class ChessMeleeTests: XCTestCase {
 			let y = visionDimensionOver2 - ((index+adjustForCenter) / visionDimension)
 			print("white: \(index), x: \(x), y: \(y)")
 		}
+	}
+	
+	func testCsvFileSave() throws {
+		LocalFileManager.shared.saveTrainingRecordsToCsvFile([TrainingRecord](), for: .pawn)
 	}
 	
 	/**
