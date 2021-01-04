@@ -62,6 +62,8 @@
 
 /* Begin PBXFileReference section */
 		D414BC9E25A31555001ED96C /* QueenMove2Model.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = QueenMove2Model.mlmodel; sourceTree = "<group>"; };
+		D414BCAA25A375BA001ED96C /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		D414BCAB25A375BA001ED96C /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		D42DF5192422580A00E0C8D4 /* ChessMelee.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ChessMelee.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D42DF51C2422580A00E0C8D4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D42DF51E2422580A00E0C8D4 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -132,6 +134,8 @@
 			children = (
 				D42DF51B2422580A00E0C8D4 /* ChessMelee */,
 				D44F87CA25A1BA52005D076F /* ChessMeleeTests */,
+				D414BCAB25A375BA001ED96C /* LICENSE */,
+				D414BCAA25A375BA001ED96C /* README.md */,
 				D42DF51A2422580A00E0C8D4 /* Products */,
 			);
 			sourceTree = "<group>";
