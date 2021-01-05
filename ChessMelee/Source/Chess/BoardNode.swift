@@ -1,6 +1,6 @@
 //
-//  GridNode.swift
-//  SwiftBots
+//  BoardNode.swift
+//  ChessMelee
 //
 //  Created by Robert Silverman on 9/5/18.
 //  Copyright © 2018 fep. All rights reserved.

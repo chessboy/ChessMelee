@@ -42,7 +42,6 @@
 		D44F877925A0768B005D076F /* GlobalStatsComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44F877825A0768B005D076F /* GlobalStatsComponent.swift */; };
 		D44F878325A076E1005D076F /* AttributedStringBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44F878225A076E1005D076F /* AttributedStringBuilder.swift */; };
 		D44F878725A07722005D076F /* ChessScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44F878625A07722005D076F /* ChessScene.swift */; };
-		D44F879125A1201A005D076F /* RunningValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44F879025A1201A005D076F /* RunningValue.swift */; };
 		D44F87CC25A1BA52005D076F /* ChessMeleeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44F87CB25A1BA52005D076F /* ChessMeleeTests.swift */; };
 		D47C9A0925992C890076AF30 /* KeyCodes.swift in Sources */ = {isa = PBXBuildFile; fileRef = D47C9A0825992C890076AF30 /* KeyCodes.swift */; };
 		D47C9A3A259AF4680076AF30 /* FloatExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = D47C9A39259AF4680076AF30 /* FloatExtension.swift */; };
@@ -98,7 +97,6 @@
 		D44F877825A0768B005D076F /* GlobalStatsComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GlobalStatsComponent.swift; sourceTree = "<group>"; };
 		D44F878225A076E1005D076F /* AttributedStringBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttributedStringBuilder.swift; sourceTree = "<group>"; };
 		D44F878625A07722005D076F /* ChessScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChessScene.swift; sourceTree = "<group>"; };
-		D44F879025A1201A005D076F /* RunningValue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RunningValue.swift; sourceTree = "<group>"; };
 		D44F87C925A1BA52005D076F /* ChessMeleeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ChessMeleeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D44F87CB25A1BA52005D076F /* ChessMeleeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChessMeleeTests.swift; sourceTree = "<group>"; };
 		D44F87CD25A1BA52005D076F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -127,6 +125,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		D414BCC825A40F70001ED96C /* App */ = {
+			isa = PBXGroup;
+			children = (
+				D4441874259E5AD4005A8534 /* LocalFileManager.swift */,
+				D42DF51C2422580A00E0C8D4 /* AppDelegate.swift */,
+				D42DF51E2422580A00E0C8D4 /* ContentView.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
 		D42DF5102422580A00E0C8D4 = {
 			isa = PBXGroup;
 			children = (
@@ -152,8 +160,6 @@
 			children = (
 				D47C9A4D259CFCD80076AF30 /* Source */,
 				D47C9A11259992090076AF30 /* ChessMelee.entitlements */,
-				D42DF51C2422580A00E0C8D4 /* AppDelegate.swift */,
-				D42DF51E2422580A00E0C8D4 /* ContentView.swift */,
 				D42DF5202422580E00E0C8D4 /* Assets.xcassets */,
 				D42DF5252422580E00E0C8D4 /* Main.storyboard */,
 				D42DF5282422580E00E0C8D4 /* Info.plist */,
@@ -254,9 +260,9 @@
 		D47C9A4D259CFCD80076AF30 /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				D4441874259E5AD4005A8534 /* LocalFileManager.swift */,
-				D47C9A51259CFCF80076AF30 /* Extensions */,
+				D414BCC825A40F70001ED96C /* App */,
 				D47C9A50259CFCE10076AF30 /* Chess */,
+				D47C9A51259CFCF80076AF30 /* Extensions */,
 				D42DF55F2426A4CD00E0C8D4 /* SwiftChess */,
 				D42DF532242258AD00E0C8D4 /* OctopusKitGame */,
 			);
@@ -286,7 +292,6 @@
 				D438DCE124280D2D002C4B16 /* StringExtensions.swift */,
 				D4441882259EFFAD005A8534 /* ArrayExtensions.swift */,
 				D44F878225A076E1005D076F /* AttributedStringBuilder.swift */,
-				D44F879025A1201A005D076F /* RunningValue.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -431,7 +436,6 @@
 				D42DF57F2426A4F600E0C8D4 /* BoardLocation.swift in Sources */,
 				D414BCBB25A3FD97001ED96C /* QueenMoveModel.mlmodel in Sources */,
 				D414BCBA25A3FD97001ED96C /* PawnMoveModel.mlmodel in Sources */,
-				D44F879125A1201A005D076F /* RunningValue.swift in Sources */,
 				D42DF55E2426497400E0C8D4 /* BoardNode.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -1,6 +1,6 @@
 //
 //  ChessComponent.swift
-//  ChessViz
+//  ChessMelee
 //
 //  Created by Robert Silverman on 3/21/20.
 //  Copyright © 2020 Robert Silverman. All rights reserved.
