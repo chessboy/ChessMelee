@@ -260,6 +260,7 @@
 		D47C9A4D259CFCD80076AF30 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				D444187C259EAC44005A8534 /* Constants.swift */,
 				D414BCC825A40F70001ED96C /* App */,
 				D47C9A50259CFCE10076AF30 /* Chess */,
 				D47C9A51259CFCF80076AF30 /* Extensions */,
@@ -273,7 +274,6 @@
 			isa = PBXGroup;
 			children = (
 				D44F87E725A1BF12005D076F /* ML Models */,
-				D444187C259EAC44005A8534 /* Constants.swift */,
 				D44F878625A07722005D076F /* ChessScene.swift */,
 				D42DF55B2426440F00E0C8D4 /* ChessComponent.swift */,
 				D47C9A3D259B9ACD0076AF30 /* BrainComponent.swift */,

@@ -136,7 +136,7 @@ class BoardNode: SKNode {
 			let toName = "piece_\(imageName)_\(String(to.index))"
 			fromNode.name = toName
 			fromNode.run(SKAction.move(to: toPosition, duration: Constants.Animation.duration).withTimingMode(.easeOut))
-			drawLine(loc1: from, loc2: to, color: Constants.Color.moveLineColor, thickness: 8)
+			drawLine(loc1: from, loc2: to, color: Constants.Color.moveLineColor, thickness: 6)
 		}
 	}
 	

@@ -29,7 +29,7 @@ struct Constants {
 	}
 
 	struct Window {
-		// you may changes these
+		// you may need to change these depending on settings above
 		static let width: CGFloat = Constants.Chessboard.squareDimension * CGFloat(Constants.Chessboard.columnCount)
 		static let height: CGFloat = 600
 	}
@@ -40,7 +40,7 @@ struct Constants {
 		
 	struct Training {
 		static let guidedTraining = false
-		static let continueTraining = false
+		static let continueTraining = guidedTraining && false
 		static let epochEndNoCaptureCount = 200
 		static let highlightCaptures = false
 		static let highlightPromotions = true

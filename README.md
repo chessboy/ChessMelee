@@ -1,12 +1,14 @@
 # ChessMelee
-AI Chess Melee
+AI Driven "Melee" Style Chess
 
 ![demo](https://github.com/chessboy/ChessMelee/blob/master/demo.gif)
 
 ## Overview
 An AI chess playing engine and interface for "melee" style chess where there is no player – it's every piece for itself!
 
-Built using the follwing libraries and tools:
+There is also a training mode to gather best moves for feeding into Create ML.
+
+Built using the following libraries and tools:
 
 - [OctopusKit](https://github.com/InvadingOctopus/octopuskit)
 - [SwiftChess](https://github.com/SteveBarnegren/SwiftChess)

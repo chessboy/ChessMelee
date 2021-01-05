@@ -303,7 +303,7 @@ final class ChessComponent: OKComponent, OKUpdatableComponent {
 		//		abs(fromLocation.x - $0.x) <= fromPiece.type.visionDimension && abs(fromLocation.y - $0.y) <= fromPiece.type.visionDimension
 		//	})
 		//	moves.forEach({
-		//		boardNode.drawLine(loc1: fromLocation, loc2: $0, color: Constants.Color.moveLineColor, thickness: 3)
+		//		boardNode.drawLine(loc1: fromLocation, loc2: $0, color: .cyan, thickness: 3)
 		//	})
 		
 		if let toPiece = board.getPiece(at: toLocation) {
