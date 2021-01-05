@@ -24,20 +24,22 @@ class ChessMeleeTests: XCTestCase {
 		let board = createBoard()
 		let piece1 = board.getPiece(at: BoardLocation(index: 0))
 		let piece2 = board.getPiece(at: BoardLocation(index: 767))
-		let inputs1 = BrainComponent.createInputsForBoard(board, at: piece1!.location)
-		let inputs2 = BrainComponent.createInputsForBoard(board, at: piece2!.location)
+		let inputs1 = BrainComponent.createInputsForBoard(board, at: piece1!.location, frame: 200)
+		let inputs2 = BrainComponent.createInputsForBoard(board, at: piece2!.location, frame: 200)
 
+		print("piece1: \(piece1!.description)")
+		print("piece2: \(piece2!.description)")
 		print(inputs1.map({Int($0)}))
 		print(inputs2.map({Int($0)}))
 
 		let piece1InputCount = (piece1!.type.visionDimension * piece1!.type.visionDimension) - 1
 		let piece2InputCount = (piece2!.type.visionDimension * piece1!.type.visionDimension) - 1
 
-		XCTAssert(inputs1.count == piece1InputCount)
-		XCTAssert(inputs2.count == piece2InputCount)
+		XCTAssert(inputs1.count == piece1InputCount + 1)
+		XCTAssert(inputs2.count == piece2InputCount + 1)
 		XCTAssert(inputs1 == inputs2)
 	}
-
+	
 	/**
 		 00 01 02 03 04
 		 --------------
@@ -67,6 +69,13 @@ class ChessMeleeTests: XCTestCase {
 		LocalFileManager.shared.saveTrainingRecordsToCsvFile([TrainingRecord](), for: .pawn)
 	}
 	
+	func testLoadCsvFile() throws {
+		let records = LocalFileManager.shared.loadTrainingRecordsFromCsvFile(for: .king)
+		for record in records.prefix(4) {
+			print("inputs: \(record.inputs), output: \(record.output)")
+		}
+	}
+
 	/**
 		 00 01 02 03 04
 		 --------------

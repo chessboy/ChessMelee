@@ -17,7 +17,7 @@ final class BrainComponent: OKComponent {
 	var rookMoveModel: RookMoveModel?
 	var knightMoveModel: KnightMoveModel?
 	var bishopMoveModel: BishopMoveModel?
-	var queenMoveModel: QueenMove2Model?
+	var queenMoveModel: QueenMoveModel?
 	var kingMoveModel: KingMoveModel?
 	
 	override func didAddToEntity(withNode node: SKNode) {
@@ -27,7 +27,7 @@ final class BrainComponent: OKComponent {
 			rookMoveModel = try RookMoveModel(configuration: MLModelConfiguration())
 			knightMoveModel = try KnightMoveModel(configuration: MLModelConfiguration())
 			bishopMoveModel = try BishopMoveModel(configuration: MLModelConfiguration())
-			queenMoveModel = try QueenMove2Model(configuration: MLModelConfiguration())
+			queenMoveModel = try QueenMoveModel(configuration: MLModelConfiguration())
 			kingMoveModel = try KingMoveModel(configuration: MLModelConfiguration())
 		} catch let error {
 			print("could not create an ML model: error: \(error.localizedDescription)")
@@ -41,7 +41,7 @@ final class BrainComponent: OKComponent {
 		case .rook: return boardStrideForRook(input: RookMoveModelInput.create(inputs: inputs), color: color)
 		case .knight: return boardStrideForKnight(input: KnightMoveModelInput.create(inputs: inputs), color: color)
 		case .bishop: return boardStrideForBishop(input: BishopMoveModelInput.create(inputs: inputs), color: color)
-		case .queen: return boardStrideForQueen(input: QueenMove2ModelInput.create(inputs: inputs), color: color)
+		case .queen: return boardStrideForQueen(input: QueenMoveModelInput.create(inputs: inputs), color: color)
 		case .king: return boardStrideForKing(input: KingMoveModelInput.create(inputs: inputs), color: color)
 		}
 	}
@@ -98,7 +98,7 @@ final class BrainComponent: OKComponent {
 		return nil
 	}
 
-	func boardStrideForQueen(input: QueenMove2ModelInput, color: PlayerColor) -> BoardStride? {
+	func boardStrideForQueen(input: QueenMoveModelInput, color: PlayerColor) -> BoardStride? {
 				
 		do {
 			if let prediction = try queenMoveModel?.prediction(input: input) {
@@ -145,7 +145,7 @@ extension BrainComponent {
 		return BoardStride(x: x, y: y)
 	}
 	
-	static func createInputsForBoard(_ board: Board, at location: BoardLocation, debug: Bool = false) -> [Int] {
+	static func createInputsForBoard(_ board: Board, at location: BoardLocation, frame: Int, debug: Bool = false) -> [Int] {
 		
 		guard let piece = board.getPiece(at: location) else {
 			return []
@@ -196,8 +196,11 @@ extension BrainComponent {
 			}
 		}
 		
+		let picker = frame % piece.type.moveSquareMaxForVision
+		inputs.append(picker)
+		
 		if debug {
-			print("piece: \(piece.asciiChar), location: \(location.index), x: \(location.x), y: \(location.y)")
+			print("piece: \(piece.asciiChar), location: \(location.index), x: \(location.x), y: \(location.y), picker: \(picker)")
 			print("\(asciiBoard)")
 			print("inputs: \(inputs.map({Int($0)})) (\(inputs.count))")
 			print()
@@ -211,7 +214,7 @@ extension BrainComponent {
 extension PawnMoveModelInput {
 	
 	static func create(inputs: [Int]) -> PawnMoveModelInput {
-		return PawnMoveModelInput(inputs_0: Double(inputs[0]), inputs_1: Double(inputs[1]), inputs_2: Double(inputs[2]), inputs_3: Double(inputs[3]), inputs_4: Double(inputs[4]), inputs_5: Double(inputs[5]), inputs_6: Double(inputs[6]), inputs_7: Double(inputs[7]), inputs_8: Double(inputs[8]), inputs_9: Double(inputs[9]), inputs_10: Double(inputs[10]), inputs_11: Double(inputs[11]), inputs_12: Double(inputs[12]), inputs_13: Double(inputs[13]), inputs_14: Double(inputs[14]), inputs_15: Double(inputs[15]), inputs_16: Double(inputs[16]), inputs_17: Double(inputs[17]), inputs_18: Double(inputs[18]), inputs_19: Double(inputs[19]), inputs_20: Double(inputs[20]), inputs_21: Double(inputs[21]), inputs_22: Double(inputs[22]), inputs_23: Double(inputs[23]))
+		return PawnMoveModelInput(inputs_0: Double(inputs[0]), inputs_1: Double(inputs[1]), inputs_2: Double(inputs[2]), inputs_3: Double(inputs[3]), inputs_4: Double(inputs[4]), inputs_5: Double(inputs[5]), inputs_6: Double(inputs[6]), inputs_7: Double(inputs[7]), inputs_8: Double(inputs[8]), inputs_9: Double(inputs[9]), inputs_10: Double(inputs[10]), inputs_11: Double(inputs[11]), inputs_12: Double(inputs[12]), inputs_13: Double(inputs[13]), inputs_14: Double(inputs[14]), inputs_15: Double(inputs[15]), inputs_16: Double(inputs[16]), inputs_17: Double(inputs[17]), inputs_18: Double(inputs[18]), inputs_19: Double(inputs[19]), inputs_20: Double(inputs[20]), inputs_21: Double(inputs[21]), inputs_22: Double(inputs[22]), inputs_23: Double(inputs[23]), picker: Double(inputs[24]))
 	}
 }
 
@@ -219,35 +222,35 @@ extension RookMoveModelInput {
 	
 	static func create(inputs: [Int]) -> RookMoveModelInput {
 		
-		return RookMoveModelInput(inputs_0: Double(inputs[0]), inputs_1: Double(inputs[1]), inputs_2: Double(inputs[2]), inputs_3: Double(inputs[3]), inputs_4: Double(inputs[4]), inputs_5: Double(inputs[5]), inputs_6: Double(inputs[6]), inputs_7: Double(inputs[7]), inputs_8: Double(inputs[8]), inputs_9: Double(inputs[9]), inputs_10: Double(inputs[10]), inputs_11: Double(inputs[11]), inputs_12: Double(inputs[12]), inputs_13: Double(inputs[13]), inputs_14: Double(inputs[14]), inputs_15: Double(inputs[15]), inputs_16: Double(inputs[16]), inputs_17: Double(inputs[17]), inputs_18: Double(inputs[18]), inputs_19: Double(inputs[19]), inputs_20: Double(inputs[20]), inputs_21: Double(inputs[21]), inputs_22: Double(inputs[22]), inputs_23: Double(inputs[23]), inputs_24: Double(inputs[24]), inputs_25: Double(inputs[25]), inputs_26: Double(inputs[26]), inputs_27: Double(inputs[27]), inputs_28: Double(inputs[28]), inputs_29: Double(inputs[29]), inputs_30: Double(inputs[30]), inputs_31: Double(inputs[31]), inputs_32: Double(inputs[32]), inputs_33: Double(inputs[33]), inputs_34: Double(inputs[34]), inputs_35: Double(inputs[35]), inputs_36: Double(inputs[36]), inputs_37: Double(inputs[37]), inputs_38: Double(inputs[38]), inputs_39: Double(inputs[39]), inputs_40: Double(inputs[40]), inputs_41: Double(inputs[41]), inputs_42: Double(inputs[42]), inputs_43: Double(inputs[43]), inputs_44: Double(inputs[44]), inputs_45: Double(inputs[45]), inputs_46: Double(inputs[46]), inputs_47: Double(inputs[47]))
+		return RookMoveModelInput(inputs_0: Double(inputs[0]), inputs_1: Double(inputs[1]), inputs_2: Double(inputs[2]), inputs_3: Double(inputs[3]), inputs_4: Double(inputs[4]), inputs_5: Double(inputs[5]), inputs_6: Double(inputs[6]), inputs_7: Double(inputs[7]), inputs_8: Double(inputs[8]), inputs_9: Double(inputs[9]), inputs_10: Double(inputs[10]), inputs_11: Double(inputs[11]), inputs_12: Double(inputs[12]), inputs_13: Double(inputs[13]), inputs_14: Double(inputs[14]), inputs_15: Double(inputs[15]), inputs_16: Double(inputs[16]), inputs_17: Double(inputs[17]), inputs_18: Double(inputs[18]), inputs_19: Double(inputs[19]), inputs_20: Double(inputs[20]), inputs_21: Double(inputs[21]), inputs_22: Double(inputs[22]), inputs_23: Double(inputs[23]), inputs_24: Double(inputs[24]), inputs_25: Double(inputs[25]), inputs_26: Double(inputs[26]), inputs_27: Double(inputs[27]), inputs_28: Double(inputs[28]), inputs_29: Double(inputs[29]), inputs_30: Double(inputs[30]), inputs_31: Double(inputs[31]), inputs_32: Double(inputs[32]), inputs_33: Double(inputs[33]), inputs_34: Double(inputs[34]), inputs_35: Double(inputs[35]), inputs_36: Double(inputs[36]), inputs_37: Double(inputs[37]), inputs_38: Double(inputs[38]), inputs_39: Double(inputs[39]), inputs_40: Double(inputs[40]), inputs_41: Double(inputs[41]), inputs_42: Double(inputs[42]), inputs_43: Double(inputs[43]), inputs_44: Double(inputs[44]), inputs_45: Double(inputs[45]), inputs_46: Double(inputs[46]), inputs_47: Double(inputs[47]), picker: Double(inputs[48]))
 	}
 }
 
 extension KnightMoveModelInput {
 	
 	static func create(inputs: [Int]) -> KnightMoveModelInput {
-		return KnightMoveModelInput(inputs_0: Double(inputs[0]), inputs_1: Double(inputs[1]), inputs_2: Double(inputs[2]), inputs_3: Double(inputs[3]), inputs_4: Double(inputs[4]), inputs_5: Double(inputs[5]), inputs_6: Double(inputs[6]), inputs_7: Double(inputs[7]), inputs_8: Double(inputs[8]), inputs_9: Double(inputs[9]), inputs_10: Double(inputs[10]), inputs_11: Double(inputs[11]), inputs_12: Double(inputs[12]), inputs_13: Double(inputs[13]), inputs_14: Double(inputs[14]), inputs_15: Double(inputs[15]), inputs_16: Double(inputs[16]), inputs_17: Double(inputs[17]), inputs_18: Double(inputs[18]), inputs_19: Double(inputs[19]), inputs_20: Double(inputs[20]), inputs_21: Double(inputs[21]), inputs_22: Double(inputs[22]), inputs_23: Double(inputs[23]))
+		return KnightMoveModelInput(inputs_0: Double(inputs[0]), inputs_1: Double(inputs[1]), inputs_2: Double(inputs[2]), inputs_3: Double(inputs[3]), inputs_4: Double(inputs[4]), inputs_5: Double(inputs[5]), inputs_6: Double(inputs[6]), inputs_7: Double(inputs[7]), inputs_8: Double(inputs[8]), inputs_9: Double(inputs[9]), inputs_10: Double(inputs[10]), inputs_11: Double(inputs[11]), inputs_12: Double(inputs[12]), inputs_13: Double(inputs[13]), inputs_14: Double(inputs[14]), inputs_15: Double(inputs[15]), inputs_16: Double(inputs[16]), inputs_17: Double(inputs[17]), inputs_18: Double(inputs[18]), inputs_19: Double(inputs[19]), inputs_20: Double(inputs[20]), inputs_21: Double(inputs[21]), inputs_22: Double(inputs[22]), inputs_23: Double(inputs[23]), picker: Double(inputs[24]))
 	}
 }
 
 extension BishopMoveModelInput {
 	
 	static func create(inputs: [Int]) -> BishopMoveModelInput {
-		return BishopMoveModelInput(inputs_0: Double(inputs[0]), inputs_1: Double(inputs[1]), inputs_2: Double(inputs[2]), inputs_3: Double(inputs[3]), inputs_4: Double(inputs[4]), inputs_5: Double(inputs[5]), inputs_6: Double(inputs[6]), inputs_7: Double(inputs[7]), inputs_8: Double(inputs[8]), inputs_9: Double(inputs[9]), inputs_10: Double(inputs[10]), inputs_11: Double(inputs[11]), inputs_12: Double(inputs[12]), inputs_13: Double(inputs[13]), inputs_14: Double(inputs[14]), inputs_15: Double(inputs[15]), inputs_16: Double(inputs[16]), inputs_17: Double(inputs[17]), inputs_18: Double(inputs[18]), inputs_19: Double(inputs[19]), inputs_20: Double(inputs[20]), inputs_21: Double(inputs[21]), inputs_22: Double(inputs[22]), inputs_23: Double(inputs[23]), inputs_24: Double(inputs[24]), inputs_25: Double(inputs[25]), inputs_26: Double(inputs[26]), inputs_27: Double(inputs[27]), inputs_28: Double(inputs[28]), inputs_29: Double(inputs[29]), inputs_30: Double(inputs[30]), inputs_31: Double(inputs[31]), inputs_32: Double(inputs[32]), inputs_33: Double(inputs[33]), inputs_34: Double(inputs[34]), inputs_35: Double(inputs[35]), inputs_36: Double(inputs[36]), inputs_37: Double(inputs[37]), inputs_38: Double(inputs[38]), inputs_39: Double(inputs[39]), inputs_40: Double(inputs[40]), inputs_41: Double(inputs[41]), inputs_42: Double(inputs[42]), inputs_43: Double(inputs[43]), inputs_44: Double(inputs[44]), inputs_45: Double(inputs[45]), inputs_46: Double(inputs[46]), inputs_47: Double(inputs[47]))
+		return BishopMoveModelInput(inputs_0: Double(inputs[0]), inputs_1: Double(inputs[1]), inputs_2: Double(inputs[2]), inputs_3: Double(inputs[3]), inputs_4: Double(inputs[4]), inputs_5: Double(inputs[5]), inputs_6: Double(inputs[6]), inputs_7: Double(inputs[7]), inputs_8: Double(inputs[8]), inputs_9: Double(inputs[9]), inputs_10: Double(inputs[10]), inputs_11: Double(inputs[11]), inputs_12: Double(inputs[12]), inputs_13: Double(inputs[13]), inputs_14: Double(inputs[14]), inputs_15: Double(inputs[15]), inputs_16: Double(inputs[16]), inputs_17: Double(inputs[17]), inputs_18: Double(inputs[18]), inputs_19: Double(inputs[19]), inputs_20: Double(inputs[20]), inputs_21: Double(inputs[21]), inputs_22: Double(inputs[22]), inputs_23: Double(inputs[23]), inputs_24: Double(inputs[24]), inputs_25: Double(inputs[25]), inputs_26: Double(inputs[26]), inputs_27: Double(inputs[27]), inputs_28: Double(inputs[28]), inputs_29: Double(inputs[29]), inputs_30: Double(inputs[30]), inputs_31: Double(inputs[31]), inputs_32: Double(inputs[32]), inputs_33: Double(inputs[33]), inputs_34: Double(inputs[34]), inputs_35: Double(inputs[35]), inputs_36: Double(inputs[36]), inputs_37: Double(inputs[37]), inputs_38: Double(inputs[38]), inputs_39: Double(inputs[39]), inputs_40: Double(inputs[40]), inputs_41: Double(inputs[41]), inputs_42: Double(inputs[42]), inputs_43: Double(inputs[43]), inputs_44: Double(inputs[44]), inputs_45: Double(inputs[45]), inputs_46: Double(inputs[46]), inputs_47: Double(inputs[47]), picker: Double(inputs[48]))
 	}
 }
 
-extension QueenMove2ModelInput {
+extension QueenMoveModelInput {
 	
-	static func create(inputs: [Int]) -> QueenMove2ModelInput {
-		return QueenMove2ModelInput(inputs_0: Double(inputs[0]), inputs_1: Double(inputs[1]), inputs_2: Double(inputs[2]), inputs_3: Double(inputs[3]), inputs_4: Double(inputs[4]), inputs_5: Double(inputs[5]), inputs_6: Double(inputs[6]), inputs_7: Double(inputs[7]), inputs_8: Double(inputs[8]), inputs_9: Double(inputs[9]), inputs_10: Double(inputs[10]), inputs_11: Double(inputs[11]), inputs_12: Double(inputs[12]), inputs_13: Double(inputs[13]), inputs_14: Double(inputs[14]), inputs_15: Double(inputs[15]), inputs_16: Double(inputs[16]), inputs_17: Double(inputs[17]), inputs_18: Double(inputs[18]), inputs_19: Double(inputs[19]), inputs_20: Double(inputs[20]), inputs_21: Double(inputs[21]), inputs_22: Double(inputs[22]), inputs_23: Double(inputs[23]), inputs_24: Double(inputs[24]), inputs_25: Double(inputs[25]), inputs_26: Double(inputs[26]), inputs_27: Double(inputs[27]), inputs_28: Double(inputs[28]), inputs_29: Double(inputs[29]), inputs_30: Double(inputs[30]), inputs_31: Double(inputs[31]), inputs_32: Double(inputs[32]), inputs_33: Double(inputs[33]), inputs_34: Double(inputs[34]), inputs_35: Double(inputs[35]), inputs_36: Double(inputs[36]), inputs_37: Double(inputs[37]), inputs_38: Double(inputs[38]), inputs_39: Double(inputs[39]), inputs_40: Double(inputs[40]), inputs_41: Double(inputs[41]), inputs_42: Double(inputs[42]), inputs_43: Double(inputs[43]), inputs_44: Double(inputs[44]), inputs_45: Double(inputs[45]), inputs_46: Double(inputs[46]), inputs_47: Double(inputs[47]))
+	static func create(inputs: [Int]) -> QueenMoveModelInput {
+		return QueenMoveModelInput(inputs_0: Double(inputs[0]), inputs_1: Double(inputs[1]), inputs_2: Double(inputs[2]), inputs_3: Double(inputs[3]), inputs_4: Double(inputs[4]), inputs_5: Double(inputs[5]), inputs_6: Double(inputs[6]), inputs_7: Double(inputs[7]), inputs_8: Double(inputs[8]), inputs_9: Double(inputs[9]), inputs_10: Double(inputs[10]), inputs_11: Double(inputs[11]), inputs_12: Double(inputs[12]), inputs_13: Double(inputs[13]), inputs_14: Double(inputs[14]), inputs_15: Double(inputs[15]), inputs_16: Double(inputs[16]), inputs_17: Double(inputs[17]), inputs_18: Double(inputs[18]), inputs_19: Double(inputs[19]), inputs_20: Double(inputs[20]), inputs_21: Double(inputs[21]), inputs_22: Double(inputs[22]), inputs_23: Double(inputs[23]), inputs_24: Double(inputs[24]), inputs_25: Double(inputs[25]), inputs_26: Double(inputs[26]), inputs_27: Double(inputs[27]), inputs_28: Double(inputs[28]), inputs_29: Double(inputs[29]), inputs_30: Double(inputs[30]), inputs_31: Double(inputs[31]), inputs_32: Double(inputs[32]), inputs_33: Double(inputs[33]), inputs_34: Double(inputs[34]), inputs_35: Double(inputs[35]), inputs_36: Double(inputs[36]), inputs_37: Double(inputs[37]), inputs_38: Double(inputs[38]), inputs_39: Double(inputs[39]), inputs_40: Double(inputs[40]), inputs_41: Double(inputs[41]), inputs_42: Double(inputs[42]), inputs_43: Double(inputs[43]), inputs_44: Double(inputs[44]), inputs_45: Double(inputs[45]), inputs_46: Double(inputs[46]), inputs_47: Double(inputs[47]), picker: Double(inputs[48]))
 	}
 }
 	
 extension KingMoveModelInput {
 	
 	static func create(inputs: [Int]) -> KingMoveModelInput {
-		return KingMoveModelInput(inputs_0: Double(inputs[0]), inputs_1: Double(inputs[1]), inputs_2: Double(inputs[2]), inputs_3: Double(inputs[3]), inputs_4: Double(inputs[4]), inputs_5: Double(inputs[5]), inputs_6: Double(inputs[6]), inputs_7: Double(inputs[7]))
+		return KingMoveModelInput(inputs_0: Double(inputs[0]), inputs_1: Double(inputs[1]), inputs_2: Double(inputs[2]), inputs_3: Double(inputs[3]), inputs_4: Double(inputs[4]), inputs_5: Double(inputs[5]), inputs_6: Double(inputs[6]), inputs_7: Double(inputs[7]), picker: Double(inputs[8]))
 	}
 }
 

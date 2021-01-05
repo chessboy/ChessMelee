@@ -23,7 +23,7 @@ class LocalFileManager {
 			columnText += "inputs_\(column),"
 		}
 		
-		rawText += "\(columnText)output\n"
+		rawText += "\(columnText)picker,output\n"
 		for trainingRecord in trainingRecords {
 			rawText += trainingRecord.inputs.map({ String($0) }).joined(separator: ",") + ",\(trainingRecord.output)\n"
 		}
@@ -35,6 +35,33 @@ class LocalFileManager {
 		} else {
 			print("could not encode training records as nonLossyASCII to \(filename).\(fileExtension)")
 		}
+	}
+	
+	public func loadTrainingRecordsFromCsvFile(for pieceType: PieceType) -> [TrainingRecord] {
+		let fileExtension = "csv"
+		let filename = "training-\(pieceType.description)"
+
+		var trainingRecords: [TrainingRecord] = []
+		if let fileUrl = createFileUrl(filename, fileExtension: fileExtension) {
+			
+			do {
+				let contents = try String(contentsOf: fileUrl, encoding: .nonLossyASCII)
+				let lines = contents.split(separator:"\n")
+				for line in lines {
+					let splits = line.split(separator: ",")
+					if let outputString = splits.last, let output = Int(outputString) {
+						let inputStrings: [String] = splits.prefix(splits.count - 1).map({ String($0) })
+						let inputs = inputStrings.map({ Int($0) ?? 0 })
+						let trainingRecord = TrainingRecord(inputs: inputs, output: output)
+						trainingRecords.append(trainingRecord)
+					}
+				}
+			} catch let error {
+				print("could not read file: \(filename).\(fileExtension), error: \(error.localizedDescription)")
+			}
+		}
+
+		return trainingRecords
 	}
 
 	public func saveTrainingRecordsToJsonFile(_ trainingRecords: [TrainingRecord], for pieceType: PieceType) {
@@ -83,8 +110,9 @@ class LocalFileManager {
 		return nil
 	}
 	
-	func loadDataFile<T: Decodable>(_ filename: String, fileExtension: String = "json", treatAsWarning: Bool = false) -> T? {
-		
+	func loadJsonFile<T: Decodable>(_ filename: String, treatAsWarning: Bool = false) -> T? {
+		let fileExtension = "json"
+
 		if let fileUrl = createFileUrl(filename, fileExtension: fileExtension) {
 			
 			do {

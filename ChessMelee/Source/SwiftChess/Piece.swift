@@ -40,11 +40,22 @@ public enum PieceType: Int, CaseIterable, CustomStringConvertible, Codable {
 	var visionDimension: Int {
 		switch self {
 		case .pawn: return 5
-		case .rook: return 7 		// --> 11 max
+		case .rook: return 7
 		case .knight: return 5
-		case .bishop: return 7		// --> 11 max
-		case .queen: return 7		// --> 11 max
+		case .bishop: return 7
+		case .queen: return 7
 		case .king: return 3
+		}
+	}
+	
+	var moveSquareMaxForVision: Int {
+		switch self {
+		case .pawn: return 4
+		case .rook: return (visionDimension - 1)/2 * 4		// 3 --> 4, 5 -> 8,  **7 -> 12**, 9 -> 16
+		case .knight: return 8
+		case .bishop: return (visionDimension - 1)/2 * 4	// 3 --> 4, 5 -> 8,  **7 -> 12**, 9 -> 16
+		case .queen: return (visionDimension - 1)/2 * 8 	// 3 --> 8, 5 -> 16, **7 -> 2	4**, 9 -> 32
+		case .king: return 8
 		}
 	}
 	
