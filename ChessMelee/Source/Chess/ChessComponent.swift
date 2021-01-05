@@ -52,6 +52,23 @@ final class ChessComponent: OKComponent, OKUpdatableComponent {
 	//	12 --> 2
 	//  14 --> 0
 	override func didAddToEntity(withNode node: SKNode) {
+		
+		guard Constants.Chessboard.boardCount > 0 else {
+			fatalError("Constants.Chessboard.boardCount must be > 0!")
+		}
+		
+		if Constants.Training.guidedTraining {
+			
+			for pieceType in PieceType.allCases {
+				trainingRecords[pieceType] = []
+
+				if Constants.Training.continueTraining {
+					trainingRecords[pieceType] = LocalFileManager.shared.loadTrainingRecordsFromCsvFile(for: pieceType)
+					print("loaded \(trainingRecords[pieceType]!.count.abbrev) training records for \(pieceType.description)")
+				}
+			}
+		}
+		
 		boardNode.position = CGPoint(x: 0, y: CGFloat(2) * Constants.Chessboard.squareDimension)
 		node.addChild(boardNode)
 		for pieceType in PieceType.allCases {
@@ -128,7 +145,7 @@ final class ChessComponent: OKComponent, OKUpdatableComponent {
 			gatherStats()
 		}
 		
-		if frame > 500, frame.isMultiple(of: 30) {
+		if Constants.Interaction.automaticBoardRefesh, frame > 500, frame.isMultiple(of: 30) {
 			if frame - lastCaptureFrame > (Constants.Training.guidedTraining ? Constants.Training.epochEndNoCaptureCount : Constants.Training.epochEndNoCaptureCount/2) {
 				setupBoard()
 				return
@@ -178,7 +195,7 @@ final class ChessComponent: OKComponent, OKUpdatableComponent {
 				builder.text(piece.description, attributes: labelAttrs).text("  ", attributes: labelAttrs)
 
 				if Constants.Training.guidedTraining {
-					builder.text(accuracyStats[piece]!.attemptedMoveCount.abbrev)
+					builder.text(trainingRecords[piece]!.count.abbrev)
 				} else {
 					builder.text(accuracyStats[piece]!.currentRating.formattedToPercent)
 				}
@@ -281,6 +298,14 @@ final class ChessComponent: OKComponent, OKUpdatableComponent {
 			return
 		}
 
+		//	var moves = board.possibleMoveLocationsForPieceFaster(fromPiece)
+		//	moves = moves.filter({
+		//		abs(fromLocation.x - $0.x) <= fromPiece.type.visionDimension && abs(fromLocation.y - $0.y) <= fromPiece.type.visionDimension
+		//	})
+		//	moves.forEach({
+		//		boardNode.drawLine(loc1: fromLocation, loc2: $0, color: Constants.Color.moveLineColor, thickness: 3)
+		//	})
+		
 		if let toPiece = board.getPiece(at: toLocation) {
 			if Constants.Training.highlightCaptures {
 				boardNode.highlightSquare(location: toLocation, color: Constants.Color.captureMove)
@@ -352,14 +377,8 @@ final class ChessComponent: OKComponent, OKUpdatableComponent {
 			}
 		}
 	}
-		
-	// pawn 	5x5 or maybe 3x3
-	// knight	5x5
-	// bishop	7x7
-	// queen	7x7
-	// rook		7x7
-	// king		3x3
-		
+	
+	// for generating training data sets
 	func moveOnceRandomly(color: PlayerColor) {
 		
 		if let fromLocation = locationOfPieceInZoneWithLegalMoves(color: color),
@@ -401,22 +420,17 @@ final class ChessComponent: OKComponent, OKUpdatableComponent {
 			if outputIndex >= centerIndex {
 				outputIndex -= 1
 			}
-			
-			if trainingRecords[fromPiece.type] == nil {
-				trainingRecords[fromPiece.type] = []
-			}
-			
+						
 			let trainingRecord = TrainingRecord(inputs: inputs, output: outputIndex)
 			let allInputs: [[Int]] = trainingRecords[fromPiece.type]!.map({ $0.inputs })
 			if !allInputs.contains(trainingRecord.inputs) {
 				trainingRecords[fromPiece.type]!.append(trainingRecord)
-				accuracyStats[fromPiece.type]!.attemptedMoveCount += 1
 			}
 			
-//				print("\(color) \(fromPiece.type.description), from: \(randomFromLocation), to: \(randomToLocation), stride: \(stride), outputs: \(xOutput),\(yOutput)")
-//				print(inputs)
-//				print(outputs)
-//				print()
+			//	print("\(color) \(fromPiece.type.description), from: \(randomFromLocation), to: \(randomToLocation), stride: \(stride), outputs: \(xOutput),\(yOutput)")
+			//	print(inputs)
+			//	print(outputs)
+			//	print()
 			
 			if let toPiece = board.getPiece(at: toLocation) {
 				lastCaptureFrame = frame
@@ -438,7 +452,7 @@ final class ChessComponent: OKComponent, OKUpdatableComponent {
 					board.setPiece(promotedPiece, at: toLocation)
 					boardNode.addPiece(promotedPiece, at: toLocation)
 				}
-		}
+			}
 		}
 	}
 		

@@ -18,6 +18,11 @@ class BoardNode: SKNode {
 
 	override init() {
 		super.init()
+		
+		guard Constants.Chessboard.boardCount > 0 else {
+			fatalError("Constants.Chessboard.boardCount must be > 0!")
+		}
+
 		let numRows = Constants.Chessboard.rowCount
 		let numCols = Constants.Chessboard.columnCount
 		let squareDim: CGFloat = Constants.Chessboard.squareDimension

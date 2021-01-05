@@ -23,6 +23,10 @@ struct Constants {
 		static let squareCount = columnCount * rowCount
 		static let showSquareIndices = false
 	}
+	
+	struct Interaction {
+		static let automaticBoardRefesh = true
+	}
 
 	struct Window {
 		// you may changes these
@@ -36,6 +40,7 @@ struct Constants {
 		
 	struct Training {
 		static let guidedTraining = false
+		static let continueTraining = false
 		static let epochEndNoCaptureCount = 200
 		static let highlightCaptures = false
 		static let highlightPromotions = true

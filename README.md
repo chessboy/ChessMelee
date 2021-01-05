@@ -1,6 +1,8 @@
 # ChessMelee
 AI Chess Melee
 
+![demo](https://github.com/chessboy/ChessMelee/blob/master/demo.gif)
+
 ## Overview
 An AI chess playing engine and interface for "melee" style chess where there is no player – it's every piece for itself!
 
