@@ -57,7 +57,7 @@ final class GlobalStatsComponent: OKComponent, OKUpdatableComponent {
 	
 	override func didAddToEntity(withNode node: SKNode) {
 		
-		let height: CGFloat = 150
+		let height: CGFloat = Constants.Interaction.statsHeight
 
 		let parentFrame = node.frame
 		let rect = CGRect(x: parentFrame.minX, y: 0, width: parentFrame.width, height: height)

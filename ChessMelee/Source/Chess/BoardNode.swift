@@ -19,9 +19,9 @@ class BoardNode: SKNode {
 	override init() {
 		super.init()
 		
-		guard Constants.Chessboard.boardCount > 0 else {
-			fatalError("Constants.Chessboard.boardCount must be > 0!")
-		}
+		guard Constants.Chessboard.boardCount > 0 else { fatalError("boardCount must be > 0 !") }
+		guard Constants.Chessboard.rowCount >= 4 else { fatalError("boardCount must be > 4 !") }
+		guard Constants.Chessboard.columnCount >= 8 else { fatalError("columnCount must be > 8 !") }
 
 		let numRows = Constants.Chessboard.rowCount
 		let numCols = Constants.Chessboard.columnCount

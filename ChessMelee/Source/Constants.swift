@@ -12,9 +12,9 @@ import SpriteKit
 struct Constants {
 	
 	struct Chessboard {
-		// you may changes these
-		static let boardCount = 6
-		static let rowCount = 12
+		// you may change these
+		static let boardCount = 8						// 1..N
+		static let rowCount = 12						// 4..N
 		static let squareDimension: CGFloat = 37.5
 
 		// you shouldn't need to change these
@@ -26,12 +26,13 @@ struct Constants {
 	
 	struct Interaction {
 		static let automaticBoardRefesh = true
+		static let statsHeight: CGFloat = 150
 	}
 
 	struct Window {
 		// you may need to change these depending on settings above
 		static let width: CGFloat = Constants.Chessboard.squareDimension * CGFloat(Constants.Chessboard.columnCount)
-		static let height: CGFloat = 600
+		static let height: CGFloat = Constants.Chessboard.squareDimension * CGFloat(Constants.Chessboard.rowCount) + Interaction.statsHeight
 	}
 	
 	struct Animation {
