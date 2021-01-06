@@ -69,7 +69,7 @@ final class ChessComponent: OKComponent, OKUpdatableComponent {
 			}
 		}
 		
-		boardNode.position = CGPoint(x: 0, y: CGFloat(2) * Constants.Chessboard.squareDimension)
+		boardNode.position = CGPoint(x: 0, y: Constants.Interaction.statsHeight/2)
 		node.addChild(boardNode)
 		for pieceType in PieceType.allCases {
 			accuracyStats[pieceType] = AccuracyStats()

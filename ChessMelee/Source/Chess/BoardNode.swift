@@ -99,7 +99,9 @@ class BoardNode: SKNode {
 			let toNodeName = nodeNameFor(piece: piece, at: to)
 			fromNode.name = toNodeName
 			fromNode.run(SKAction.move(to: toPosition, duration: Constants.Animation.duration).withTimingMode(.easeOut))
-			drawLine(loc1: from, loc2: to, color: Constants.Color.moveLineColor, thickness: 6)
+			if Constants.Animation.highlightMoves {
+				drawLine(loc1: from, loc2: to, color: Constants.Color.moveLineColor, thickness: 6)
+			}
 		}
 	}
 	

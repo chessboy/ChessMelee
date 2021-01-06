@@ -16,7 +16,7 @@ Built using the following libraries and tools:
 
 ## Requirements
 - macOS 11 (Big Sur)
-- Git LFS
+- [Git LFS](https://git-lfs.github.com/)
 
 ## Installation
 The ML models are quite large and [Git LFS](https://git-lfs.github.com/) is required to clone this repo.

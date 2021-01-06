@@ -37,6 +37,7 @@ struct Constants {
 	
 	struct Animation {
 		static let duration: TimeInterval = 0.33
+		static let highlightMoves = true
 		static let highlightCaptures = false
 		static let highlightPromotions = false
 		static let highlightNoMoves = true
