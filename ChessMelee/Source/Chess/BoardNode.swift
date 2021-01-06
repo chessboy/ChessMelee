@@ -100,7 +100,8 @@ class BoardNode: SKNode {
 			fromNode.name = toNodeName
 			fromNode.run(SKAction.move(to: toPosition, duration: Constants.Animation.duration).withTimingMode(.easeOut))
 			if Constants.Animation.highlightMoves {
-				drawLine(loc1: from, loc2: to, color: Constants.Color.moveLineColor, thickness: 6)
+				let thickness = Constants.Chessboard.squareDimension * 0.15
+				drawLine(loc1: from, loc2: to, color: Constants.Color.moveLineColor, thickness: thickness)
 			}
 		}
 	}

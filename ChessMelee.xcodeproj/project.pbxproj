@@ -46,6 +46,7 @@
 		D4A6855325A5500600493893 /* KnightMoveModel.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = D4A6854D25A5500500493893 /* KnightMoveModel.mlmodel */; };
 		D4A6855425A5500600493893 /* BishopMoveModel.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = D4A6854E25A5500600493893 /* BishopMoveModel.mlmodel */; };
 		D4A6855525A5500600493893 /* PawnMoveModel.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = D4A6854F25A5500600493893 /* PawnMoveModel.mlmodel */; };
+		D4A6856325A6300B00493893 /* ScreenInspector.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4A6856225A6300B00493893 /* ScreenInspector.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -104,6 +105,7 @@
 		D4A6854D25A5500500493893 /* KnightMoveModel.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = KnightMoveModel.mlmodel; sourceTree = "<group>"; };
 		D4A6854E25A5500600493893 /* BishopMoveModel.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = BishopMoveModel.mlmodel; sourceTree = "<group>"; };
 		D4A6854F25A5500600493893 /* PawnMoveModel.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = PawnMoveModel.mlmodel; sourceTree = "<group>"; };
+		D4A6856225A6300B00493893 /* ScreenInspector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenInspector.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -131,6 +133,7 @@
 				D4441874259E5AD4005A8534 /* LocalFileManager.swift */,
 				D42DF51C2422580A00E0C8D4 /* AppDelegate.swift */,
 				D42DF51E2422580A00E0C8D4 /* ContentView.swift */,
+				D4A6856225A6300B00493893 /* ScreenInspector.swift */,
 			);
 			path = App;
 			sourceTree = "<group>";
@@ -424,6 +427,7 @@
 				D42DF556242258AD00E0C8D4 /* GlobalDataComponent.swift in Sources */,
 				D42DF55C2426440F00E0C8D4 /* ChessComponent.swift in Sources */,
 				D4489674259D8C4500EEE6A8 /* IntMath.swift in Sources */,
+				D4A6856325A6300B00493893 /* ScreenInspector.swift in Sources */,
 				D47C9A3E259B9ACD0076AF30 /* BrainComponent.swift in Sources */,
 				D438DCE224280D2D002C4B16 /* StringExtensions.swift in Sources */,
 				D4441879259E5F82005A8534 /* LocalFileManager.swift in Sources */,

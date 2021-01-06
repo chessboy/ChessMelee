@@ -13,9 +13,11 @@ struct Constants {
 	
 	struct Chessboard {
 		// you may change these
-		static let boardCount = 6						// 1..N
-		static let rowCount = 12						// 4..N
-		static let squareDimension: CGFloat = 37.5
+		static let boardCount = 8
+		static let rowCount = 12
+		static let squareDimension: CGFloat = min(
+			ScreenInspector.shared.width/(CGFloat(boardCount)*8),
+			(ScreenInspector.shared.height - (Interaction.statsHeight + 50))/CGFloat(rowCount))
 
 		// you shouldn't need to change these
 		static let zoneCount = boardCount * 2
