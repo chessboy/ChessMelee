@@ -187,12 +187,7 @@ extension BrainComponent {
 						let testLocation = BoardLocation(x: location.x + x, y: location.y + y)
 						if let testPiece = board.getPiece(at: testLocation) {
 							asciiBoard += "\(testPiece.asciiChar) "
-							if Constants.Training.useNewerModels {
-								inputs.append(testPiece.type.inputValue + (testPiece.color == piece.color ? 0 : 6))
-							}
-							else {
-								inputs.append(testPiece.color == piece.color ? 1 : 2)
-							}
+							inputs.append(testPiece.type.inputValue + (testPiece.color == piece.color ? 0 : 6))
 						} else {
 							// empty
 							asciiBoard += "- "

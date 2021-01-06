@@ -13,7 +13,7 @@ struct Constants {
 	
 	struct Chessboard {
 		// you may change these
-		static let boardCount = 8						// 1..N
+		static let boardCount = 6						// 1..N
 		static let rowCount = 12						// 4..N
 		static let squareDimension: CGFloat = 37.5
 
@@ -37,17 +37,16 @@ struct Constants {
 	
 	struct Animation {
 		static let duration: TimeInterval = 0.33
+		static let highlightCaptures = false
+		static let highlightPromotions = false
+		static let highlightNoMoves = true
+		static let highlightIllegalMoves = true
 	}
 		
 	struct Training {
-		static let useNewerModels = true
 		static let guidedTraining = false
 		static let continueTraining = guidedTraining && false
 		static let epochEndNoCaptureCount = 200
-		static let highlightCaptures = false
-		static let highlightPromotions = true
-		static let highlightNoMoves = true
-		static let highlightIllegalMoves = true
 	}
 	
 	struct Color {

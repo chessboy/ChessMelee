@@ -270,7 +270,7 @@ final class ChessComponent: OKComponent, OKUpdatableComponent {
 		let predictedBoardStride = brainComponent!.boardStrideForPiece(pieceType: fromPiece.type, inputs: inputs, color: color)
 
 		guard let boardStride = predictedBoardStride else {
-			if Constants.Training.highlightNoMoves {
+			if Constants.Animation.highlightNoMoves {
 				boardNode.highlightSquare(location: fromLocation, color: Constants.Color.noMove)
 			}
 			//print("no boardstride returned from inference. outputs: \(outputs.map({ $0.formattedTo2Places }))")
@@ -280,7 +280,7 @@ final class ChessComponent: OKComponent, OKUpdatableComponent {
 		
 		guard fromLocation.canIncrement(by: boardStride) else {
 			// trying to move off the board
-			if Constants.Training.highlightIllegalMoves {
+			if Constants.Animation.highlightIllegalMoves {
 				boardNode.highlightSquare(location: fromLocation, color: Constants.Color.illegalMove)
 			}
 			accuracyStats[fromPiece.type]!.illegalMoveCount += 1
@@ -291,7 +291,7 @@ final class ChessComponent: OKComponent, OKUpdatableComponent {
 		
 		guard board.possibleMoveLocationsForPieceUsingVision(fromPiece).contains(toLocation) else {
 			// trying to move to a friendly-occupied square
-			if Constants.Training.highlightIllegalMoves {
+			if Constants.Animation.highlightIllegalMoves {
 				boardNode.highlightSquare(location: fromLocation, color: Constants.Color.illegalMove)
 			}
 			accuracyStats[fromPiece.type]!.illegalMoveCount += 1
@@ -307,7 +307,7 @@ final class ChessComponent: OKComponent, OKUpdatableComponent {
 		//	})
 		
 		if let toPiece = board.getPiece(at: toLocation) {
-			if Constants.Training.highlightCaptures {
+			if Constants.Animation.highlightCaptures {
 				boardNode.highlightSquare(location: toLocation, color: Constants.Color.captureMove)
 			}
 			lastCaptureFrame = frame
@@ -322,7 +322,7 @@ final class ChessComponent: OKComponent, OKUpdatableComponent {
 			// check promotion
 			if !toLocation.canIncrement(by: BoardStride(x: 0, y: color == .white ? 1 : -1)) {
 				lastCaptureFrame = frame
-				if Constants.Training.highlightPromotions {
+				if Constants.Animation.highlightPromotions {
 					boardNode.highlightSquare(location: toLocation, color: Constants.Color.promotionMove)
 				}
 				board.removePiece(at: toLocation)
