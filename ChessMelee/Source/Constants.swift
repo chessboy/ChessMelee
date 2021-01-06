@@ -40,6 +40,7 @@ struct Constants {
 	}
 		
 	struct Training {
+		static let useNewerModels = false
 		static let guidedTraining = false
 		static let continueTraining = guidedTraining && false
 		static let epochEndNoCaptureCount = 200

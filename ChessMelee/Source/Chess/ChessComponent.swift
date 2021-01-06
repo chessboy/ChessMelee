@@ -26,7 +26,7 @@ struct AccuracyStats {
 }
 
 final class ChessComponent: OKComponent, OKUpdatableComponent {
-    
+	
 	private var board = Board()
 	private var boardNode = BoardNode()
 	
@@ -41,11 +41,11 @@ final class ChessComponent: OKComponent, OKUpdatableComponent {
 
 	lazy var brainComponent = coComponent(BrainComponent.self)
 
-    override var requiredComponents: [GKComponent.Type]? {[
+	override var requiredComponents: [GKComponent.Type]? {[
 		SpriteKitComponent.self,
 		BrainComponent.self
 		]
-    }
+	}
 		
 	//	 8 --> 4
 	//	10 --> 3
@@ -289,7 +289,7 @@ final class ChessComponent: OKComponent, OKUpdatableComponent {
 					
 		let toLocation = fromLocation.incremented(by: boardStride)
 		
-		guard board.possibleMoveLocationsForPieceFaster(fromPiece).contains(toLocation) else {
+		guard board.possibleMoveLocationsForPieceUsingVision(fromPiece).contains(toLocation) else {
 			// trying to move to a friendly-occupied square
 			if Constants.Training.highlightIllegalMoves {
 				boardNode.highlightSquare(location: fromLocation, color: Constants.Color.illegalMove)
@@ -360,7 +360,7 @@ final class ChessComponent: OKComponent, OKUpdatableComponent {
 						return
 					}
 					
-					var moves = board.possibleMoveLocationsForPieceFaster(piece)
+					var moves = board.possibleMoveLocationsForPieceUsingVision(piece)
 					moves = moves.filter({
 						abs(boardLoc.x - $0.x) <= piece.type.visionDimension && abs(boardLoc.y - $0.y) <= piece.type.visionDimension
 					})
@@ -384,12 +384,11 @@ final class ChessComponent: OKComponent, OKUpdatableComponent {
 		if let fromLocation = locationOfPieceInZoneWithLegalMoves(color: color),
 		   let fromPiece = board.getPiece(at: fromLocation) {
 			
-			var moves = board.possibleMoveLocationsForPieceFaster(fromPiece)
+			var moves = board.possibleMoveLocationsForPieceUsingVision(fromPiece)
 			
 			// all legal moves within the piece's vision
-			moves = moves.filter({
-				abs(fromLocation.x - $0.x) <= fromPiece.type.visionDimension && abs(fromLocation.y - $0.y) <= fromPiece.type.visionDimension
-			}).sorted(by: { (loc1, loc2) -> Bool in
+			moves = moves.sorted(by: { (loc1, loc2) -> Bool in
+				// go for longest stride
 				return abs(fromLocation.x - loc1.x) + abs(fromLocation.y - loc1.y) > abs(fromLocation.x - loc2.x) + abs(fromLocation.y - loc2.y)
 			})
 		
@@ -397,9 +396,21 @@ final class ChessComponent: OKComponent, OKUpdatableComponent {
 			let captures = moves.filter({ location in
 				board.getPiece(at: location)?.color == color.opposite
 			}).sorted(by: { (loc1, loc2) -> Bool in
-				// TODO: use piece value in the future when more than just friend|enemy is sent via inputs
-				return abs(fromLocation.x - loc1.x) + abs(fromLocation.y - loc1.y) > abs(fromLocation.x - loc2.x) + abs(fromLocation.y - loc2.y)
+				let value1 = board.getPiece(at: loc1)?.type.value ?? 0
+				let value2 = board.getPiece(at: loc2)?.type.value ?? 0
+				if value1 != value2 {
+					// go for highest pice value
+					return value1 > value2
+				}
+				else {
+					// go for shortest stride
+					return abs(fromLocation.x - loc1.x) + abs(fromLocation.y - loc1.y) < abs(fromLocation.x - loc2.x) + abs(fromLocation.y - loc2.y)
+				}
 			})
+			
+//			if captures.count > 0 {
+//				print(captures.map{ board.getPiece(at: $0)!.description })
+//			}
 
 			guard let toLocation = captures.count > 0 ? captures[frame % captures.count] : moves.count > 0 ? moves[frame % moves.count] : nil else {
 				print("-•- Houston, we have a problem")
@@ -458,8 +469,8 @@ final class ChessComponent: OKComponent, OKUpdatableComponent {
 		
 	func renderBoard() {
 		boardNode.removeAllPieces()
-        for sourceLocation in BoardLocation.all {
-            if let piece = board.getPiece(at: sourceLocation) {
+		for sourceLocation in BoardLocation.all {
+			if let piece = board.getPiece(at: sourceLocation) {
 				boardNode.addPiece(piece, at: sourceLocation)
 			}
 		}

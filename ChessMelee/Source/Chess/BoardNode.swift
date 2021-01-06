@@ -30,9 +30,8 @@ class BoardNode: SKNode {
 		let squareSize = CGSize(width: squareDim, height: squareDim)
 		let xOffset: CGFloat = -(squareDim * (CGFloat(numCols)-1))/2
 		let yOffset: CGFloat = -(squareDim * (CGFloat(numRows)-1))/2
-		// Column characters
 
-		var toggle:Bool = true
+		var toggle = true
 		var index = 0
 		for row in 0...numRows-1 {
 			for col in 0...numCols-1 {
@@ -61,10 +60,57 @@ class BoardNode: SKNode {
 		}
 	}
 		
-    func squareNodeForLocation(_ location: BoardLocation) -> SKSpriteNode? {
+	func squareNodeForLocation(_ location: BoardLocation) -> SKSpriteNode? {
 		return self.childNode(withName: String(location.index)) as? SKSpriteNode
-    }
+	}
 	
+	func removeAllPieces() {
+		let toBeRemoved = children.filter({ ($0.name?.starts(with: "piece") ?? false)})
+		removeChildren(in: toBeRemoved)
+	}
+	
+	func imageNameFor(piece: Piece, at location: BoardLocation) -> String {
+		let id = piece.color == .white ? "w" : "b"
+		return "\(id)\(piece.type.char)"
+	}
+	
+	func nodeNameFor(piece: Piece, at location: BoardLocation) -> String {
+		let imageName = imageNameFor(piece: piece, at: location)
+		let nodeName = "piece_\(imageName)_\(String(location.index))"
+		return nodeName
+	}
+	
+	func addPiece(_ piece: Piece, at location: BoardLocation) {
+		let imageName = imageNameFor(piece: piece, at: location)
+		let nodeName = nodeNameFor(piece: piece, at: location)
+		let node = SKSpriteNode(imageNamed: imageName).scale(0.7 * Constants.Chessboard.squareDimension * 0.01)
+		node.zPosition = 1
+		node.name = nodeName
+		if let squareNode = squareNodeForLocation(location) {
+			node.position = squareNode.center
+		}
+		
+		self.addChild(node)
+	}
+
+	func movePiece(_ piece: Piece, from: BoardLocation, to: BoardLocation) {
+		let fromNodeName = nodeNameFor(piece: piece, at: from)
+		if let fromNode = childNode(withName: fromNodeName), let toPosition = squareNodeForLocation(to)?.center {
+			let toNodeName = nodeNameFor(piece: piece, at: to)
+			fromNode.name = toNodeName
+			fromNode.run(SKAction.move(to: toPosition, duration: Constants.Animation.duration).withTimingMode(.easeOut))
+			drawLine(loc1: from, loc2: to, color: Constants.Color.moveLineColor, thickness: 6)
+		}
+	}
+	
+	func removePiece(_ piece: Piece, from: BoardLocation) {
+		let fromNodeName = nodeNameFor(piece: piece, at: from)
+		if let fromNode = childNode(withName: fromNodeName) {
+			let fadeAndRemove = SKAction.fadeOutAndRemove(withDuration: Constants.Animation.duration, timingMode: .linear)
+			fromNode.run(fadeAndRemove)
+		}
+	}
+
 	func highlightSquare(location: BoardLocation, color: SKColor) {
 
 		if let squareNode = squareNodeForLocation(location) {
@@ -104,51 +150,4 @@ class BoardNode: SKNode {
 			}
 		}
 	}
-			
-	func removeAllPieces() {
-		let toBeRemoved = children.filter({ ($0.name?.starts(with: "piece") ?? false)})
-		removeChildren(in: toBeRemoved)
-	}
-	
-	func addPiece(_ piece: Piece, at boardLoc: BoardLocation) {
-		
-		let id = piece.color == .white ? "w" : "b"
-		let imageName = "\(id)\(piece.type.char)"
-		//let locationName = boardLoc.gridPosition.name
-		//print("addPiece: \(locationName): \(imageName)")
-		
-		let node = SKSpriteNode(imageNamed: imageName).scale(0.7 * Constants.Chessboard.squareDimension * 0.01)
-		node.zPosition = 1
-		node.name = "piece_\(imageName)_\(String(boardLoc.index))"
-		if let squareNode = squareNodeForLocation(boardLoc) {
-			node.position = squareNode.center
-		}
-		
-		self.addChild(node)
-	}
-
-	func movePiece(_ piece: Piece, from: BoardLocation, to: BoardLocation) {
-		let id = piece.color == .white ? "w" : "b"
-		let imageName = "\(id)\(piece.type.char)"
-		let fromName = "piece_\(imageName)_\(String(from.index))"
-		
-		if let fromNode = childNode(withName: fromName), let toPosition = squareNodeForLocation(to)?.center {
-			let toName = "piece_\(imageName)_\(String(to.index))"
-			fromNode.name = toName
-			fromNode.run(SKAction.move(to: toPosition, duration: Constants.Animation.duration).withTimingMode(.easeOut))
-			drawLine(loc1: from, loc2: to, color: Constants.Color.moveLineColor, thickness: 6)
-		}
-	}
-	
-	func removePiece(_ piece: Piece, from: BoardLocation) {
-		let id = piece.color == .white ? "w" : "b"
-		let imageName = "\(id)\(piece.type.char)"
-		let fromName = "piece_\(imageName)_\(String(from.index))"
-		
-		if let fromNode = childNode(withName: fromName) {
-			let fadeAndRemove = SKAction.fadeOutAndRemove(withDuration: Constants.Animation.duration, timingMode: .linear)
-			fromNode.run(fadeAndRemove)
-		}
-	}
-
 }

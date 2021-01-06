@@ -13,20 +13,20 @@ NOTE: heaviliy modified to handle infinite-sized chess board
 import Foundation
 
 public enum PlayerColor: String, CaseIterable {
-    case white = "White"
-    case black = "Black"
-    
-    public var opposite: PlayerColor {
-        return (self == .white) ? .black : .white
-    }
-    
-    public var string: String {
-        return rawValue.lowercased()
-    }
-    
-    public var stringWithCapital: String {
-        return rawValue
-    }
+	case white = "White"
+	case black = "Black"
+	
+	public var opposite: PlayerColor {
+		return (self == .white) ? .black : .white
+	}
+	
+	public var string: String {
+		return rawValue.lowercased()
+	}
+	
+	public var stringWithCapital: String {
+		return rawValue
+	}
 }
 
 public enum PieceType: Int, CaseIterable, CustomStringConvertible, Codable {
@@ -36,6 +36,17 @@ public enum PieceType: Int, CaseIterable, CustomStringConvertible, Codable {
 	case bishop
 	case queen
 	case king
+		
+	var inputValue: Int {
+		switch self {
+		case .pawn: return 1
+		case .rook: return 2
+		case .knight: return 3
+		case .bishop: return 4
+		case .queen: return 5
+		case .king: return 6
+		}
+	}
 	
 	var visionDimension: Int {
 		switch self {
@@ -47,7 +58,7 @@ public enum PieceType: Int, CaseIterable, CustomStringConvertible, Codable {
 		case .king: return 3
 		}
 	}
-	
+
 	var moveSquareMaxForVision: Int {
 		switch self {
 		case .pawn: return 4
@@ -64,7 +75,7 @@ public enum PieceType: Int, CaseIterable, CustomStringConvertible, Codable {
 		case .pawn: return 1
 		case .rook: return 5
 		case .knight: return 3
-		case .bishop: return 3
+		case .bishop: return 3.1
 		case .queen: return 9
 		case .king: return 50
 		}
@@ -92,17 +103,6 @@ public enum PieceType: Int, CaseIterable, CustomStringConvertible, Codable {
 		}
 	}
 	
-	static func fromKeycode(keycode: UInt16) -> PieceType {
-		switch keycode {
-		case Keycode.two: return .rook
-		case Keycode.three: return .knight
-		case Keycode.four: return .bishop
-		case Keycode.five: return .queen
-		case Keycode.six: return .king
-		default: return .pawn // Keycode.one
-		}
-	}
-			
 	static func possiblePawnPromotionResultingTypes() -> [PieceType] {
 		return [.queen, .knight, .rook, .bishop]
 	}
@@ -110,40 +110,40 @@ public enum PieceType: Int, CaseIterable, CustomStringConvertible, Codable {
 
 public struct Piece: Equatable, CustomStringConvertible {
 	
-    public let type: PieceType
-    public let color: PlayerColor
-    public internal(set) var tag: Int!
-    public internal(set) var hasMoved = false
-    public internal(set) var location = BoardLocation(index: 0)
+	public let type: PieceType
+	public let color: PlayerColor
+	public internal(set) var tag: Int!
+	public internal(set) var hasMoved = false
+	public internal(set) var location = BoardLocation(index: 0)
 	public internal(set) var zoneId: Int = 0
 	
 	public var description: String {
 		return "{\(color) \(type)}"
 	}
 	
-    var movement: PieceMovement! {
-        return PieceMovement.pieceMovement(for: self.type)
-    }
-        
-    var value: Double {
-        return type.value
-    }
-    
+	var movement: PieceMovement! {
+		return PieceMovement.pieceMovement(for: self.type)
+	}
+		
+	var value: Double {
+		return type.value
+	}
+	
 	public init(type: PieceType, color: PlayerColor, tag: Int, zoneId: Int) {
-        self.type = type
-        self.color = color
+		self.type = type
+		self.color = color
 		self.tag = tag
 		self.zoneId = zoneId
-    }
-        
-    func isSameTypeAndColor(asPiece other: Piece) -> Bool {
-        
-        if self.type == other.type && self.color == other.color {
-            return true
-        } else {
-            return false
-        }
-    }
+	}
+		
+	func isSameTypeAndColor(asPiece other: Piece) -> Bool {
+		
+		if self.type == other.type && self.color == other.color {
+			return true
+		} else {
+			return false
+		}
+	}
 	
 	var asciiChar: Character {
 		switch type {
