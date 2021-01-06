@@ -40,6 +40,12 @@
 		D47C9A0925992C890076AF30 /* KeyCodes.swift in Sources */ = {isa = PBXBuildFile; fileRef = D47C9A0825992C890076AF30 /* KeyCodes.swift */; };
 		D47C9A3A259AF4680076AF30 /* FloatExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = D47C9A39259AF4680076AF30 /* FloatExtension.swift */; };
 		D47C9A3E259B9ACD0076AF30 /* BrainComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = D47C9A3D259B9ACD0076AF30 /* BrainComponent.swift */; };
+		D4A6855025A5500600493893 /* RookMoveModel.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = D4A6854A25A5500300493893 /* RookMoveModel.mlmodel */; };
+		D4A6855125A5500600493893 /* QueenMoveModel.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = D4A6854B25A5500400493893 /* QueenMoveModel.mlmodel */; };
+		D4A6855225A5500600493893 /* KingMoveModel.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = D4A6854C25A5500400493893 /* KingMoveModel.mlmodel */; };
+		D4A6855325A5500600493893 /* KnightMoveModel.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = D4A6854D25A5500500493893 /* KnightMoveModel.mlmodel */; };
+		D4A6855425A5500600493893 /* BishopMoveModel.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = D4A6854E25A5500600493893 /* BishopMoveModel.mlmodel */; };
+		D4A6855525A5500600493893 /* PawnMoveModel.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = D4A6854F25A5500600493893 /* PawnMoveModel.mlmodel */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -92,6 +98,12 @@
 		D47C9A11259992090076AF30 /* ChessMelee.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ChessMelee.entitlements; sourceTree = "<group>"; };
 		D47C9A39259AF4680076AF30 /* FloatExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatExtension.swift; sourceTree = "<group>"; };
 		D47C9A3D259B9ACD0076AF30 /* BrainComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrainComponent.swift; sourceTree = "<group>"; };
+		D4A6854A25A5500300493893 /* RookMoveModel.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = RookMoveModel.mlmodel; sourceTree = "<group>"; };
+		D4A6854B25A5500400493893 /* QueenMoveModel.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = QueenMoveModel.mlmodel; sourceTree = "<group>"; };
+		D4A6854C25A5500400493893 /* KingMoveModel.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = KingMoveModel.mlmodel; sourceTree = "<group>"; };
+		D4A6854D25A5500500493893 /* KnightMoveModel.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = KnightMoveModel.mlmodel; sourceTree = "<group>"; };
+		D4A6854E25A5500600493893 /* BishopMoveModel.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = BishopMoveModel.mlmodel; sourceTree = "<group>"; };
+		D4A6854F25A5500600493893 /* PawnMoveModel.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = PawnMoveModel.mlmodel; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -235,6 +247,12 @@
 		D44F87E725A1BF12005D076F /* ML Models */ = {
 			isa = PBXGroup;
 			children = (
+				D4A6854E25A5500600493893 /* BishopMoveModel.mlmodel */,
+				D4A6854C25A5500400493893 /* KingMoveModel.mlmodel */,
+				D4A6854D25A5500500493893 /* KnightMoveModel.mlmodel */,
+				D4A6854F25A5500600493893 /* PawnMoveModel.mlmodel */,
+				D4A6854B25A5500400493893 /* QueenMoveModel.mlmodel */,
+				D4A6854A25A5500300493893 /* RookMoveModel.mlmodel */,
 			);
 			path = "ML Models";
 			sourceTree = "<group>";
@@ -393,11 +411,14 @@
 				D4441883259EFFAD005A8534 /* ArrayExtensions.swift in Sources */,
 				D44F877925A0768B005D076F /* GlobalStatsComponent.swift in Sources */,
 				D44F878325A076E1005D076F /* AttributedStringBuilder.swift in Sources */,
+				D4A6855425A5500600493893 /* BishopMoveModel.mlmodel in Sources */,
 				D42DF5872426A4FB00E0C8D4 /* BoardStride.swift in Sources */,
 				D42DF54B242258AD00E0C8D4 /* 1 - OKQuickStartView.swift in Sources */,
 				D47C9A0925992C890076AF30 /* KeyCodes.swift in Sources */,
+				D4A6855025A5500600493893 /* RookMoveModel.mlmodel in Sources */,
 				D42DF57E2426A4F600E0C8D4 /* Piece.swift in Sources */,
 				D44F878725A07722005D076F /* ChessScene.swift in Sources */,
+				D4A6855225A5500600493893 /* KingMoveModel.mlmodel in Sources */,
 				D42DF54D242258AD00E0C8D4 /* 6A - PlayState.swift in Sources */,
 				D42DF555242258AD00E0C8D4 /* ButtonStyles.swift in Sources */,
 				D42DF556242258AD00E0C8D4 /* GlobalDataComponent.swift in Sources */,
@@ -410,7 +431,10 @@
 				D42DF559242258AD00E0C8D4 /* 3 - MyGameViewController.swift in Sources */,
 				D444187D259EAC44005A8534 /* Constants.swift in Sources */,
 				D42DF5792426A4F600E0C8D4 /* BoardOperation.swift in Sources */,
+				D4A6855125A5500600493893 /* QueenMoveModel.mlmodel in Sources */,
+				D4A6855325A5500600493893 /* KnightMoveModel.mlmodel in Sources */,
 				D42DF51D2422580A00E0C8D4 /* AppDelegate.swift in Sources */,
+				D4A6855525A5500600493893 /* PawnMoveModel.mlmodel in Sources */,
 				D42DF57F2426A4F600E0C8D4 /* BoardLocation.swift in Sources */,
 				D42DF55E2426497400E0C8D4 /* BoardNode.swift in Sources */,
 			);
