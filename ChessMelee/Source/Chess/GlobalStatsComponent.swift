@@ -13,7 +13,7 @@ import OctopusKit
 final class GlobalStatsComponent: OKComponent, OKUpdatableComponent {
 	
 	var textNode: SKLabelNode!
-	var maskNode: SKShapeNode!
+	var maskNode: SKSpriteNode!
 	var pointerEventComponent: PointerEventComponent
 	
 	init(pointerEventComponent: PointerEventComponent) {
@@ -34,7 +34,9 @@ final class GlobalStatsComponent: OKComponent, OKUpdatableComponent {
 	}
 
 	func setPaused(_ paused: Bool) {
-		maskNode.fillColor = paused ? SKColor(red: 0.5, green: 0, blue: 0, alpha: 0.5) : .clear// SKColor(white: 0, alpha: 0.75)
+		let color = paused ? SKColor(red: 0.5, green: 0, blue: 0, alpha: 0.5) : .clear
+		let colorize = SKAction.colorize(with: color, colorBlendFactor: 1, duration: 0.15)
+		maskNode.run(colorize)
 	}
 	
 	func toggleVisibility() {
@@ -61,17 +63,14 @@ final class GlobalStatsComponent: OKComponent, OKUpdatableComponent {
 
 		let parentFrame = node.frame
 		let rect = CGRect(x: parentFrame.minX, y: 0, width: parentFrame.width, height: height)
-		maskNode = SKShapeNode(rect: rect)
-		maskNode.lineWidth = 0
-		maskNode.fillColor = .clear//SKColor(white: 0, alpha: 0.75)
-		maskNode.position = CGPoint(x: 0, y: parentFrame.origin.y)
+		maskNode = SKSpriteNode(color: .clear, size: rect.size)
+		maskNode.position = CGPoint(x: 0, y: parentFrame.origin.y + height/2)
 		maskNode.zPosition = 200
 
     	textNode = SKLabelNode()
 		textNode.numberOfLines = 2
 		textNode.horizontalAlignmentMode = .center
 		textNode.verticalAlignmentMode = .center
-		textNode.position = CGPoint(x: 0, y: height/2)
 		maskNode.addChild(textNode)
 		
 		node.addChild(maskNode)

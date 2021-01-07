@@ -26,6 +26,17 @@ final class ChessScene: OKScene {
 		self.name = "ChessScene"
 		super.sceneDidLoad()
 	}
+	
+	override func didMove(to: SKView) {
+		super.didMove(to: to)
+		
+		// from ShinryakuTako: Steal the focus on macOS so the player doesn't have to click on the view before using the keyboard.
+		to.window?.makeFirstResponder(self)
+		// CHECK: why is no cursor stuff working?
+		//to.window?.enableCursorRects()
+		//to.addCursorRect(to.bounds, cursor: .pointingHand)
+		//NSCursor.pointingHand.set()
+	}
 
 	// MARK: 🔶 STEP 6B.2
 	override func createComponentSystems() -> [GKComponent.Type] {
