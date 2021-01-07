@@ -53,8 +53,8 @@ struct Constants {
 	}
 	
 	struct Color {
-		static let whiteSquareColor = SKColor(red: 0.324, green: 0.432, blue: 0.495, alpha: 1)
-		static let blackSquareColor = SKColor(red: 0.612, green: 0.648, blue: 0.657, alpha: 1)
+		static let lightSquareColor = SKColor(red: 0.612, green: 0.648, blue: 0.657, alpha: 1)
+		static let darkSquareColor = SKColor(red: 0.324, green: 0.432, blue: 0.495, alpha: 1)
 
 		static let noMove = SKColor(red: 0.2, green: 0.2, blue: 0.2, alpha: 0.85)
 		static let illegalMove = SKColor(red: 1, green: 0.2, blue: 0.2, alpha: 0.85)

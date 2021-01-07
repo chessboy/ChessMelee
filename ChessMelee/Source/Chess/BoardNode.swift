@@ -31,11 +31,11 @@ class BoardNode: SKNode {
 		let xOffset: CGFloat = -(squareDim * (CGFloat(numCols)-1))/2
 		let yOffset: CGFloat = -(squareDim * (CGFloat(numRows)-1))/2
 
-		var toggle = true
 		var index = 0
 		for row in 0...numRows-1 {
 			for col in 0...numCols-1 {
-				let color = toggle ? Constants.Color.whiteSquareColor : Constants.Color.blackSquareColor
+				let lightSquare = (row + col) % 2 == 1
+				let color = lightSquare ? Constants.Color.lightSquareColor : Constants.Color.darkSquareColor
 				let square = SKSpriteNode(color: color, size: squareSize)
 				square.position = CGPoint(
 					x: CGFloat(col) * squareSize.width + xOffset,
@@ -52,11 +52,8 @@ class BoardNode: SKNode {
 					lableNode.position = CGPoint(x: 0, y: -5)
 					square.addChild(lableNode)
 				}
-				
-				toggle = !toggle
 				index += 1
 			}
-			toggle = !toggle
 		}
 	}
 		
