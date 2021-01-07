@@ -12,7 +12,6 @@
 		D42DF5212422580E00E0C8D4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D42DF5202422580E00E0C8D4 /* Assets.xcassets */; };
 		D42DF5242422580E00E0C8D4 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D42DF5232422580E00E0C8D4 /* Preview Assets.xcassets */; };
 		D42DF5272422580E00E0C8D4 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D42DF5252422580E00E0C8D4 /* Main.storyboard */; };
-		D42DF5312422586A00E0C8D4 /* OctopusKit in Frameworks */ = {isa = PBXBuildFile; productRef = D42DF5302422586A00E0C8D4 /* OctopusKit */; };
 		D42DF54B242258AD00E0C8D4 /* 1 - OKQuickStartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D42DF533242258AD00E0C8D4 /* 1 - OKQuickStartView.swift */; };
 		D42DF54D242258AD00E0C8D4 /* 6A - PlayState.swift in Sources */ = {isa = PBXBuildFile; fileRef = D42DF537242258AD00E0C8D4 /* 6A - PlayState.swift */; };
 		D42DF54E242258AD00E0C8D4 /* 6C - PlayUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = D42DF538242258AD00E0C8D4 /* 6C - PlayUI.swift */; };
@@ -47,6 +46,7 @@
 		D4A6855425A5500600493893 /* BishopMoveModel.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = D4A6854E25A5500600493893 /* BishopMoveModel.mlmodel */; };
 		D4A6855525A5500600493893 /* PawnMoveModel.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = D4A6854F25A5500600493893 /* PawnMoveModel.mlmodel */; };
 		D4A6856325A6300B00493893 /* ScreenInspector.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4A6856225A6300B00493893 /* ScreenInspector.swift */; };
+		D4A68B6925A6D12E00493893 /* OctopusKit in Frameworks */ = {isa = PBXBuildFile; productRef = D4A68B6825A6D12E00493893 /* OctopusKit */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -113,7 +113,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D42DF5312422586A00E0C8D4 /* OctopusKit in Frameworks */,
+				D4A68B6925A6D12E00493893 /* OctopusKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -316,7 +316,7 @@
 			);
 			name = ChessMelee;
 			packageProductDependencies = (
-				D42DF5302422586A00E0C8D4 /* OctopusKit */,
+				D4A68B6825A6D12E00493893 /* OctopusKit */,
 			);
 			productName = ChessViz;
 			productReference = D42DF5192422580A00E0C8D4 /* ChessMelee.app */;
@@ -369,7 +369,7 @@
 			);
 			mainGroup = D42DF5102422580A00E0C8D4;
 			packageReferences = (
-				D42DF52F2422586A00E0C8D4 /* XCRemoteSwiftPackageReference "octopuskit" */,
+				D4A68B6725A6D12E00493893 /* XCRemoteSwiftPackageReference "octopuskit" */,
 			);
 			productRefGroup = D42DF51A2422580A00E0C8D4 /* Products */;
 			projectDirPath = "";
@@ -712,7 +712,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		D42DF52F2422586A00E0C8D4 /* XCRemoteSwiftPackageReference "octopuskit" */ = {
+		D4A68B6725A6D12E00493893 /* XCRemoteSwiftPackageReference "octopuskit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/InvadingOctopus/octopuskit.git";
 			requirement = {
@@ -723,9 +723,9 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		D42DF5302422586A00E0C8D4 /* OctopusKit */ = {
+		D4A68B6825A6D12E00493893 /* OctopusKit */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = D42DF52F2422586A00E0C8D4 /* XCRemoteSwiftPackageReference "octopuskit" */;
+			package = D4A68B6725A6D12E00493893 /* XCRemoteSwiftPackageReference "octopuskit" */;
 			productName = OctopusKit;
 		};
 /* End XCSwiftPackageProductDependency section */

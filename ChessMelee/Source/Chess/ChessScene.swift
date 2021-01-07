@@ -160,7 +160,9 @@ final class ChessScene: OKScene {
 		switch event.keyCode {
 			
 		case Keycode.space:
-			togglePauseByPlayer()
+			if let chessComponent = self.entity?.component(ofType: ChessComponent.self) {
+				chessComponent.togglePause()
+			}
 			break
 			
 		case Keycode.r:

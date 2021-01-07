@@ -34,7 +34,7 @@ final class GlobalStatsComponent: OKComponent, OKUpdatableComponent {
 	}
 
 	func setPaused(_ paused: Bool) {
-		maskNode.fillColor = paused ? SKColor(red: 0.5, green: 0, blue: 0, alpha: 0.5) : SKColor(white: 0, alpha: 0.75)
+		maskNode.fillColor = paused ? SKColor(red: 0.5, green: 0, blue: 0, alpha: 0.5) : .clear// SKColor(white: 0, alpha: 0.75)
 	}
 	
 	func toggleVisibility() {

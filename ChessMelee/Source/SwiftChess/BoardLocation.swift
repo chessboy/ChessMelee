@@ -12,10 +12,14 @@ NOTE: heaviliy modified to handle infinite-sized chess board
 
 import Foundation
 
-public struct BoardLocation: Equatable {
+public struct BoardLocation: Equatable, CustomStringConvertible {
         
     public var index: Int
 	    
+	public var description: String {
+		return "{index: \(index), x,y: \(x),\(y)}"
+	}
+	
     private static var allLocationsBacking: [BoardLocation]?
     public static var all: [BoardLocation] {
         

@@ -13,7 +13,7 @@ struct Constants {
 	
 	struct Chessboard {
 		// you may change these
-		static let boardCount = 8
+		static let boardCount = 6
 		static let rowCount = 12
 		static let squareDimension: CGFloat = min(
 			ScreenInspector.shared.width/(CGFloat(boardCount)*8),
@@ -53,8 +53,8 @@ struct Constants {
 	}
 	
 	struct Color {
-		static let whiteSquareColor = SKColor(red: 92.8/255, green: 121.6/255, blue: 139.2/255, alpha: 1)
-		static let blackSquareColor = SKColor(red: 174.4/255, green: 183.2/255, blue: 186.4/255, alpha: 1)
+		static let whiteSquareColor = SKColor(red: 0.324, green: 0.432, blue: 0.495, alpha: 1)
+		static let blackSquareColor = SKColor(red: 0.612, green: 0.648, blue: 0.657, alpha: 1)
 
 		static let noMove = SKColor(red: 0.2, green: 0.2, blue: 0.2, alpha: 0.85)
 		static let illegalMove = SKColor(red: 1, green: 0.2, blue: 0.2, alpha: 0.85)

@@ -111,6 +111,8 @@ class BoardNode: SKNode {
 		if let fromNode = childNode(withName: fromNodeName) {
 			let fadeAndRemove = SKAction.fadeOutAndRemove(withDuration: Constants.Animation.duration, timingMode: .linear)
 			fromNode.run(fadeAndRemove)
+		} else {
+			print("-•- removePiece: did not find node for \(piece.description) at: \(from)")
 		}
 	}
 

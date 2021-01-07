@@ -27,6 +27,7 @@ struct AccuracyStats {
 
 final class ChessComponent: OKComponent, OKUpdatableComponent {
 	
+	private var isPaused = false
 	private var board = Board()
 	private var boardNode = BoardNode()
 	
@@ -77,6 +78,14 @@ final class ChessComponent: OKComponent, OKUpdatableComponent {
 		setupBoard()
 	}
 		
+	func togglePause() {
+		isPaused.toggle()
+		
+		if let statsComponent = coComponent(GlobalStatsComponent.self) {
+			statsComponent.setPaused(isPaused)
+		}
+	}
+	
 	func setupBoard() {
 	
 		frame = 0
@@ -140,6 +149,10 @@ final class ChessComponent: OKComponent, OKUpdatableComponent {
 	}
 							
 	override func update(deltaTime seconds: TimeInterval) {
+		
+		guard !isPaused else {
+			return
+		}
 		
 		if frame.isMultiple(of: 50) {
 			gatherStats()
@@ -367,11 +380,18 @@ final class ChessComponent: OKComponent, OKUpdatableComponent {
 
 					print("moves at \(boardLoc.index) for \(piece.color) \(piece.type.char) are \(moves)")
 					moves.forEach({
-						boardNode.drawLine(loc1: boardLoc, loc2: $0, color: .red, thickness: 6)
+						boardNode.drawLine(loc1: boardLoc, loc2: $0, color: .yellow, thickness: Constants.Chessboard.squareDimension * 0.1)
 					})
 					
-					if shiftDown {
-						let _ = BrainComponent.createInputsForBoard(board, at: boardLoc, frame: frame, debug: true)
+					if shiftDown, moves.count > 0 {
+						let inputs = BrainComponent.createInputsForBoard(board, at: boardLoc, frame: frame, debug: optionDown)
+						if let boardStride = brainComponent!.boardStrideForPiece(pieceType: piece.type, inputs: inputs, color: piece.color) {
+							if boardLoc.canIncrement(by: boardStride) {
+								boardNode.drawLine(loc1: boardLoc, loc2: boardLoc.incremented(by: boardStride), color: Constants.Color.moveLineColor, thickness: Constants.Chessboard.squareDimension * 0.2)
+							} else {
+								boardNode.highlightSquare(location: boardLoc, color: Constants.Color.illegalMove)
+							}
+						}
 					}
 				}
 			}
