@@ -716,8 +716,8 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/InvadingOctopus/octopuskit.git";
 			requirement = {
-				branch = develop;
-				kind = branch;
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.2.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */

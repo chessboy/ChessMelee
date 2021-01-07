@@ -83,7 +83,8 @@ class BoardNode: SKNode {
 	func addPiece(_ piece: Piece, at location: BoardLocation) {
 		let imageName = imageNameFor(piece: piece, at: location)
 		let nodeName = nodeNameFor(piece: piece, at: location)
-		let node = SKSpriteNode(imageNamed: imageName).scale(0.7 * Constants.Chessboard.squareDimension * 0.01)
+		let node = SKSpriteNode(imageNamed: imageName)
+		node.setScale(0.7 * Constants.Chessboard.squareDimension * 0.01)
 		node.zPosition = 1
 		node.name = nodeName
 		if let squareNode = squareNodeForLocation(location) {

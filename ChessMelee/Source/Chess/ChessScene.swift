@@ -20,16 +20,16 @@ final class ChessScene: OKScene {
     
     // MARK: - Life Cycle
     
-    // MARK: 🔶 STEP 6B.1
-    override func setName() -> String? {
-        
-        // Set the name of this scene at the earliest override-able point, for logging purposes.
-        "Chess Scene"
-    }
-    
-    // MARK: 🔶 STEP 6B.2
-    override func createComponentSystems() -> [GKComponent.Type] {
-        
+	override func sceneDidLoad() {
+		
+		// Set the name of this scene at the earliest override-able point, for logging purposes.
+		self.name = "ChessScene"
+		super.sceneDidLoad()
+	}
+
+	// MARK: 🔶 STEP 6B.2
+	override func createComponentSystems() -> [GKComponent.Type] {
+
         // This method is called by the OKScene superclass, after the scene has been presented in a view, to create a list of systems for each component type that must be updated in every frame of this scene.
         //
         // ❗️ The order of components is important, as the functionality of some components depends on the output of other components.
@@ -48,14 +48,17 @@ final class ChessScene: OKScene {
             ChessComponent.self
         ]
     }
+	
+	
     
     // MARK: 🔶 STEP 6B.3
-    override func createContents() {
-        
+	public override func prepareContents() {
+
         // This method is called by the OKScene superclass, after the scene has been presented in a view, to let each subclass (the scenes specific to your game) create its contents and add entities to the scene.
                 
         // Create the entities to present in this scene.
-        
+		super.prepareContents()
+
         // Set the permanent visual properties of the scene itself.
         
         self.anchorPoint = CGPoint.half
