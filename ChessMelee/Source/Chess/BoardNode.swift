@@ -101,6 +101,8 @@ class BoardNode: SKNode {
 				let thickness = Constants.Chessboard.squareDimension * 0.15
 				drawLine(loc1: from, loc2: to, color: Constants.Color.moveLineColor, thickness: thickness)
 			}
+		} else {
+			print("-•- movePiece: did not find node for \(piece.description) at: \(from)")
 		}
 	}
 	

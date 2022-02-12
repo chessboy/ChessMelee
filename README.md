@@ -32,8 +32,7 @@ Then you can clone the repo and the ML Models will be included.
 ## Configuration
 Edit `Constants.swift`:
 - Change `Constants.Chessboard.boardCount` for more or less boards horizontally
-- You may adjust `Constants.Chessboard.rowCount` for more or less ranks vertically
-- You may also want to adjust `Constants.Window.width` and/or `.height`
+- Change `Constants.Chessboard.rowCount` for more or less ranks vertically
 
 Have fun!
 

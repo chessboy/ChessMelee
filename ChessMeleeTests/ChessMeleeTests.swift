@@ -65,17 +65,6 @@ class ChessMeleeTests: XCTestCase {
 		}
 	}
 	
-	func testCsvFileSave() throws {
-		LocalFileManager.shared.saveTrainingRecordsToCsvFile([TrainingRecord](), for: .pawn)
-	}
-	
-	func testLoadCsvFile() throws {
-		let records = LocalFileManager.shared.loadTrainingRecordsFromCsvFile(for: .king)
-		for record in records.prefix(4) {
-			print("inputs: \(record.inputs), output: \(record.output)")
-		}
-	}
-
 	/**
 		 00 01 02 03 04
 		 --------------

@@ -20,7 +20,7 @@ struct Constants {
 			(ScreenInspector.shared.height - (Interaction.statsHeight + 50))/CGFloat(rowCount))
 
 		// you shouldn't need to change these
-		static let zoneCount = boardCount * 2
+		static let zoneCount = boardCount * 2 
 		static let columnCount = zoneCount * 4
 		static let squareCount = columnCount * rowCount
 		static let showSquareIndices = false
